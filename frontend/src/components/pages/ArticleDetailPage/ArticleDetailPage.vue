@@ -50,7 +50,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import ArticleDetailTemplate from "../../templates/ArticleDetail/ArticleDetail.vue";
-import { get } from "../../../utils/api.js";
+import axios from "../../../utils/axios.js";
 
 const route = useRoute();
 
@@ -74,23 +74,16 @@ const fetchArticle = async () => {
   error.value = null;
 
   try {
-    const response = await get(`/articles/${articleId}`);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error("Article not found");
-      }
-      throw new Error(
-        `Failed to fetch article: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const data = await response.json();
-    article.value = data;
+    const response = await axios.get(`/articles/${articleId}`);
+    article.value = response.data;
   } catch (err) {
     console.error("Error fetching article:", err);
-    error.value =
-      err.message || "Failed to load article. Please try again later.";
+    if (err.response?.status === 404) {
+      error.value = "Article not found";
+    } else {
+      error.value =
+        err.response?.data?.message || err.message || "Failed to load article. Please try again later.";
+    }
     article.value = null;
   } finally {
     loading.value = false;

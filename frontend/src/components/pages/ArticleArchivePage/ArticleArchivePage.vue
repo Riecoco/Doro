@@ -40,7 +40,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ArticleArchive from "../../templates/ArticleArchive/ArticleArchive.vue";
-import { get } from "../../../utils/api.js";
+import axios from "../../../utils/axios.js";
 
 const articles = ref([]);
 const loading = ref(true);
@@ -54,20 +54,12 @@ const fetchArticles = async () => {
   error.value = null;
 
   try {
-    const response = await get("/articles");
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch articles: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const data = await response.json();
-    articles.value = data;
+    const response = await axios.get("/articles");
+    articles.value = response.data;
   } catch (err) {
     console.error("Error fetching articles:", err);
     error.value =
-      err.message || "Failed to load articles. Please try again later.";
+      err.response?.data?.message || err.message || "Failed to load articles. Please try again later.";
     articles.value = [];
   } finally {
     loading.value = false;
