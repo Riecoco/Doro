@@ -1,18 +1,15 @@
 <template>
   <article class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-    <div class="p-6">
+    <router-link 
+      :to="`/articles/${article.id}`" 
+      class="block p-6 hover:text-blue-600 transition-colors"
+    >
       <div class="flex items-start justify-between mb-3">
         <CategoryBadge :category="article.category" />
       </div>
       
       <Heading :level="3" size="xl" class="mb-3">
-        <a 
-          :href="`#/articles/${article.id}`" 
-          class="hover:text-blue-600 transition-colors"
-          @click.prevent="$emit('click', article.id)"
-        >
-          {{ article.title }}
-        </a>
+        {{ article.title }}
       </Heading>
       
       <Text 
@@ -28,7 +25,7 @@
         :author="article.author" 
         :published="article.published" 
       />
-    </div>
+    </router-link>
   </article>
 </template>
 
@@ -48,8 +45,6 @@ const props = defineProps({
     },
   },
 });
-
-defineEmits(['click']);
 
 const truncatedContent = computed(() => {
   const maxLength = 150;

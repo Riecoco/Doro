@@ -30,12 +30,12 @@
           </Heading>
           <ul class="space-y-2">
             <li v-for="link in quickLinks" :key="link.name">
-              <a 
-                :href="link.href" 
+              <router-link 
+                :to="link.href" 
                 class="text-gray-600 hover:text-blue-600 transition-colors text-sm"
               >
                 {{ link.name }}
-              </a>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -47,12 +47,12 @@
           </Heading>
           <ul class="space-y-2">
             <li v-for="link in legalLinks" :key="link.name">
-              <a 
-                :href="link.href" 
+              <router-link 
+                :to="link.href" 
                 class="text-gray-600 hover:text-blue-600 transition-colors text-sm"
               >
                 {{ link.name }}
-              </a>
+              </router-link>
             </li>
           </ul>
         </div>

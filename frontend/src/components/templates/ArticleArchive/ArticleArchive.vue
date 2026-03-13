@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50">
-    <Header :navigation-links="navigationLinks" />
+    <Header />
     
     <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <div class="mb-8">
@@ -19,7 +19,6 @@
           v-for="article in articles"
           :key="article.id"
           :article="article"
-          @click="handleArticleClick"
         />
       </div>
       
@@ -32,10 +31,7 @@
       
     </main>
     
-    <Footer 
-      :quick-links="footerQuickLinks"
-      :legal-links="footerLegalLinks"
-    />
+    <Footer />
   </div>
 </template>
 
@@ -46,36 +42,10 @@ import ArticleCard from '../../organisms/ArticleCard/ArticleCard.vue';
 import Heading from '../../atoms/Heading/Heading.vue';
 import Text from '../../atoms/Text/Text.vue';
 
-const props = defineProps({
+defineProps({
   articles: {
     type: Array,
     default: () => [],
-  },
-  navigationLinks: {
-    type: Array,
-    default: () => [
-      { name: 'Home', href: '/' },
-      { name: 'Articles', href: '/articles' },
-      { name: 'About', href: '/about' },
-      { name: 'Contact', href: '/contact' },
-    ],
-  },
-  footerQuickLinks: {
-    type: Array,
-    default: () => [
-      { name: 'Home', href: '/' },
-      { name: 'Articles', href: '/articles' },
-      { name: 'Categories', href: '/categories' },
-      { name: 'About', href: '/about' },
-    ],
-  },
-  footerLegalLinks: {
-    type: Array,
-    default: () => [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-    ],
   },
   showFilters: {
     type: Boolean,
@@ -86,10 +56,4 @@ const props = defineProps({
     default: false,
   },
 });
-
-const emit = defineEmits(['article-click']);
-
-const handleArticleClick = (articleId) => {
-  emit('article-click', articleId);
-};
 </script>

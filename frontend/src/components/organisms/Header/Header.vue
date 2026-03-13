@@ -4,21 +4,21 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <Heading :level="1" size="xl" class="text-blue-600">
-            <a href="/" class="hover:text-blue-700 transition-colors">
+            <router-link to="/" class="hover:text-blue-700 transition-colors">
               Article Archive
-            </a>
+            </router-link>
           </Heading>
         </div>
 
         <nav class="hidden md:flex space-x-8">
-          <a
+          <router-link
             v-for="link in navigationLinks"
             :key="link.name"
-            :href="link.href"
+            :to="link.href"
             class="text-gray-700 hover:text-blue-600 transition-colors font-medium"
           >
             {{ link.name }}
-          </a>
+          </router-link>
         </nav>
 
         <div class="md:hidden">
@@ -55,14 +55,14 @@
       <!-- Mobile menu -->
       <div v-if="mobileMenuOpen" class="md:hidden pb-4">
         <nav class="flex flex-col space-y-2">
-          <a
+          <router-link
             v-for="link in navigationLinks"
             :key="link.name"
-            :href="link.href"
+            :to="link.href"
             class="text-gray-700 hover:text-blue-600 transition-colors px-2 py-1"
           >
             {{ link.name }}
-          </a>
+          </router-link>
         </nav>
       </div>
     </div>

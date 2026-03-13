@@ -16,7 +16,6 @@
       class="min-h-screen flex items-center justify-center"
     >
       <div class="text-center max-w-md">
-        <div class="text-red-600 text-5xl mb-4">⚠️</div>
         <h2 class="text-2xl font-bold text-gray-900 mb-2">
           Error Loading Articles
         </h2>
@@ -34,7 +33,6 @@
     <ArticleArchive
       v-else
       :articles="articles"
-      @article-click="handleArticleClick"
     />
   </div>
 </template>
@@ -74,17 +72,6 @@ const fetchArticles = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-/**
- * Handle article click event
- * @param {number} articleId - The ID of the clicked article
- */
-const handleArticleClick = (articleId) => {
-  // Navigate to article detail page
-  // This can be implemented with Vue Router or your preferred routing solution
-  console.log("Article clicked:", articleId);
-  // Example: router.push(`/articles/${articleId}`);
 };
 
 // Fetch articles when component is mounted
