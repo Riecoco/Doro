@@ -40,23 +40,9 @@ import { useArticleStore } from "../../../stores/article.js";
 const route = useRoute();
 const articleStore = useArticleStore();
 
-/**
- * Fetch article from the API
- */
-const fetchArticle = async () => {
-  const articleId = route.params.id;
-  
-  if (!articleId) {
-    return;
-  }
-  
-  await articleStore.fetchArticleById(articleId);
-  
-};
-
 // Fetch article when component is mounted
-onMounted(() => {
-  fetchArticle();
+onMounted(async () => {
+  await articleStore.fetchArticleById(route.params.id);
 });
 
 </script>
