@@ -1,9 +1,9 @@
 <template>
   <article class="max-w-4xl mx-auto">
-    <div class="mb-6">
+    <div class="mb-6 flex justify-between items-center">
       <router-link
         to="/"
-        class="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors mb-6"
+        class="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors"
       >
         <svg
           class="w-5 h-5 mr-2"
@@ -19,6 +19,15 @@
           />
         </svg>
         Back to Articles
+      </router-link>
+      <router-link
+        :to="`/articles/${article.id}/edit`"
+        class="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+      >
+        <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+        </svg>
+        Edit Article
       </router-link>
     </div>
     

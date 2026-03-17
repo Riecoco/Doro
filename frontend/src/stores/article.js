@@ -72,6 +72,52 @@ export const useArticleStore = defineStore("article", () => {
     }
   }
 
+  /**
+   * Update an article
+   * @param {Object} article - Article object with id and data to update
+   */
+  async function updateArticle(article) {
+    const articleId = article.id || article._id;
+    loading.value = true;
+    error.value = null;
+
+    try {
+      await axios.put(`/articles/${articleId}`, article);
+      await fetchArticles();
+    } catch (err) {
+      console.error("Error updating article:", err);
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to update article. Please try again.";
+        throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  /**
+   * Create a new article
+   * @param {Object} article - Article object with data to create
+   */
+  async function createArticle(article) {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      await axios.post("/articles", article);
+      await fetchArticles();
+    } catch (err) {
+      console.error("Error creating article:", err);
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to create article. Please try again.";
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     // State
     articles,
@@ -81,5 +127,7 @@ export const useArticleStore = defineStore("article", () => {
     // Actions
     fetchArticles,
     fetchArticleById,
+    updateArticle,
+    createArticle,
   };
 });
