@@ -4,13 +4,19 @@ namespace App\Models;
 
 use App\Framework\Model;
 use App\Models\Enums\Role;
+use App\Framework\Annotations\Email;
+use App\Framework\Annotations\Required;
 
 class User extends Model
 {
     public ?int $userID;
+    #[Required]
     public string $username;
+    #[Required]
     public Role $role;
+    #[Email] #[Required]
     public string $email;
+    #[Required]
     public string $password;
     public ?string $spotifyAccessToken;
     public ?string $customBgImgFilepath;

@@ -11,7 +11,7 @@ class ThemePresetRepository extends Repository implements IThemePresetRepository
     /**
      * @return ThemePreset[]
      */
-    public function getAllThemePresets(): array
+    public function getAll(): array
     {
         $sql = 'SELECT * FROM ThemePresets';
         $stmt = $this->getConnection()->prepare($sql);
@@ -19,7 +19,7 @@ class ThemePresetRepository extends Repository implements IThemePresetRepository
         return $stmt->fetchAll(\PDO::FETCH_CLASS, ThemePreset::class);
     }
 
-    public function getThemePresetById(int $themePresetID): ?ThemePreset
+    public function getById(int $themePresetID): ?ThemePreset
     {
         $sql = 'SELECT * FROM ThemePresets WHERE themePresetID = :themePresetID';
         $stmt = $this->getConnection()->prepare($sql);
@@ -28,13 +28,13 @@ class ThemePresetRepository extends Repository implements IThemePresetRepository
         return $result ?: null;
     }
 
-    public function createThemePreset(ThemePreset $themePreset, int $userID): int
+    public function create(ThemePreset $themePreset): ThemePreset
     {
         $sql = 'INSERT INTO ThemePresets 
                             (name, bgImgFilePath, bgImgFileName, primaryColor, 
-                            bgColor, textColor, accentColor, userID) 
+                            bgColor, textColor, accentColor) 
                 VALUES (:name, :bgImgFilePath, :bgImgFileName, :primaryColor, 
-                        :bgColor, :textColor, :accentColor, :userID)';
+                        :bgColor, :textColor, :accentColor)';
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':name', $themePreset->name, \PDO::PARAM_STR);
         $stmt->bindValue(':bgImgFilePath', $themePreset->bgImgFilePath, \PDO::PARAM_STR);
@@ -43,12 +43,12 @@ class ThemePresetRepository extends Repository implements IThemePresetRepository
         $stmt->bindValue(':bgColor', $themePreset->bgColor, \PDO::PARAM_STR);
         $stmt->bindValue(':textColor', $themePreset->textColor, \PDO::PARAM_STR);
         $stmt->bindValue(':accentColor', $themePreset->accentColor, \PDO::PARAM_STR);
-        $stmt->bindValue(':userID', $userID, \PDO::PARAM_INT);
         $stmt->execute();
-        return (int)$this->getConnection()->lastInsertId();
+        $themePreset->themePresetID = (int)$this->getConnection()->lastInsertId();
+        return $this->getById($themePreset->themePresetID);
     }
 
-    public function updateThemePreset(ThemePreset $themePreset): bool
+    public function update(ThemePreset $themePreset): bool
     {
         $sql = 'UPDATE ThemePresets 
                 SET name = :name, bgImgFilePath = :bgImgFilePath, bgImgFileName = :bgImgFileName, 
@@ -67,7 +67,7 @@ class ThemePresetRepository extends Repository implements IThemePresetRepository
         return $stmt->execute();
     }
 
-    public function deleteThemePreset(int $themePresetID): bool
+    public function delete(int $themePresetID): bool
     {
         $sql = 'DELETE FROM ThemePresets WHERE themePresetID = :themePresetID';
         $stmt = $this->getConnection()->prepare($sql);

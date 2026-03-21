@@ -6,7 +6,6 @@ use App\Framework\Repository;
 use App\Models\Task;
 use App\Models\Session;
 use App\Models\Subtask;
-use App\Models\TimerConfig;
 use App\Repositories\Interfaces\ITaskRepository;
 
 class TaskRepository extends Repository implements ITaskRepository
@@ -14,7 +13,7 @@ class TaskRepository extends Repository implements ITaskRepository
     /**
      * @return Task[]
      */
-    public function getAllTasks(int $userID): array
+    public function getAll(int $userID): array
     {
         $sql = "
             SELECT T.taskID, T.userID, T.title, T.description, T.isCompleted, T.estimatedCycles,
@@ -64,7 +63,7 @@ class TaskRepository extends Repository implements ITaskRepository
         }
     }
 
-    public function getTaskById(int $taskID): ?Task
+    public function getById(int $taskID): ?Task
     {
         $sql = "
             SELECT * FROM Tasks 
@@ -75,7 +74,7 @@ class TaskRepository extends Repository implements ITaskRepository
         return $data ? new Task($data) : null;
     }
 
-    public function createTask(Task $task): int
+    public function create(Task $task): Task
     {
         $sql = "
             INSERT INTO Tasks (userID, title, description, isCompleted) 
@@ -87,13 +86,16 @@ class TaskRepository extends Repository implements ITaskRepository
             'description' => $task->description,
             'isCompleted' => $task->isCompleted,
         ]);
-        return (int)$this->getConnection()->lastInsertId();
+        $taskID = (int)$this->getConnection()->lastInsertId();
+        $task->taskID = $taskID;
+        return $this->getById($taskID);
     }
 
-    public function updateTask(Task $task): bool
+    public function update(Task $task): bool
     {
-        $sql = "
-            UPDATE Tasks SET title = :title, description = :description, isCompleted = :isCompleted WHERE taskID = :taskID";
+        $sql = "UPDATE Tasks 
+                SET title = :title, description = :description, isCompleted = :isCompleted 
+                WHERE taskID = :taskID";
         $stmt = $this->getConnection()->prepare($sql);
         return $stmt->execute([
             'taskID' => $task->taskID,
@@ -103,10 +105,9 @@ class TaskRepository extends Repository implements ITaskRepository
         ]);
     }
 
-    public function deleteTask(int $taskID): bool
+    public function delete(int $taskID): bool
     {
-        $sql = "
-            UPDATE Tasks SET isDeleted = 1 WHERE taskID = :taskID";
+        $sql = "DELETE FROM Tasks WHERE taskID = :taskID";
         $stmt = $this->getConnection()->prepare($sql);
         return $stmt->execute(['taskID' => $taskID]);
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Interfaces;
+namespace App\Services\Interfaces;
 
 use App\Models\ThemePreset;
 
-interface IThemePresetRepository
+interface IThemePresetService
 {
     public function getAll(): array;
     public function getById(int $themePresetID): ?ThemePreset;

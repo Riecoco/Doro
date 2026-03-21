@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Interfaces;
+namespace App\Services\Interfaces;
 
 use App\Models\Task;
 
-interface ITaskRepository
+interface ITaskService
 {
     public function getAll(int $userID): array;
     public function getById(int $taskID): ?Task;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Interfaces;
+namespace App\Services\Interfaces;
 
 use App\Models\Subtask;
 
-interface ISubtaskRepository
+interface ISubtaskService
 {
     public function create(Subtask $subtask): Subtask;
     public function update(Subtask $subtask): bool;

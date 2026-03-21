@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use App\Framework\Annotations\Required;
 use App\Framework\Model;
 
 class Task extends Model
 {
     public ?int $taskID;
     public ?User $user;
+    #[Required]
     public string $title;
+    #[Required]
     public string $description;
+    #[Required]
     public bool $isCompleted;
-    public bool $isDeleted;
+    #[Required]
     public int $estimatedCycles;
     /**
      * @var Subtask[]
@@ -28,7 +32,6 @@ class Task extends Model
         $this->title = $data['title'] ?? '';
         $this->description = $data['description'] ?? '';
         $this->isCompleted = $data['isCompleted'] ?? false;
-        $this->isDeleted = $data['isDeleted'] ?? false;
         $this->estimatedCycles = $data['estimatedCycles'] ?? 0;
         $this->user = $data['userID'] ? new User($data) : null;
         $this->subtasks = $subtasks;

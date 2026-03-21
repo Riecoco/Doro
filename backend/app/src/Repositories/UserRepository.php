@@ -47,7 +47,8 @@ class UserRepository extends Repository implements IUserRepository
         $stmt = $this->getConnection()->prepare($timerConfigSql);
         $stmt->bindValue(':userID', $userID, \PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_CLASS, User::class);
+        $user->userID = $userID;
+        return $this->getById($userID);
     }
 
     public function update(User $user): bool

@@ -13,7 +13,7 @@ class TimerConfigRepository extends Repository implements ITimerConfigRepository
         parent::__construct(TimerConfig::class);
     }
 
-    public function resetTimerConfigForUser(int $userID): bool
+    public function resetForUser(int $userID): bool
     {
         $sql = '
             UPDATE TimerConfigs
@@ -25,7 +25,7 @@ class TimerConfigRepository extends Repository implements ITimerConfigRepository
         return $stmt->execute(['userID' => $userID]);
     }
 
-    public function getTimerConfigForUser(int $userID): TimerConfig
+    public function getForUser(int $userID): TimerConfig
     {
         $sql = 'SELECT * FROM TimerConfigs WHERE user_id = :userID';
         $stmt = $this->getConnection()->prepare($sql);
@@ -34,7 +34,7 @@ class TimerConfigRepository extends Repository implements ITimerConfigRepository
         return new TimerConfig($result);
     }
 
-    public function updateTimerConfigForUser(TimerConfig $timerConfig): bool
+    public function updateForUser(TimerConfig $timerConfig): bool
     {
         $sql = '
             UPDATE TimerConfigs

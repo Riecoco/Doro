@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Interfaces;
+namespace App\Services\Interfaces;
 
 use App\Models\Session;
 
-interface ISessionRepository
+interface ISessionService
 {
     public function create(Session $session): Session;
     //public function delete(int $sessionID): bool;

@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Enums\Type;
+use App\Framework\Annotations\Required;
 use App\Framework\Model;
 
 class TimerConfig extends Model
 {
     public ?int $timerConfigID;
+    #[Required]
     public int $userID;
+    #[Required]
     public int $focusDuration;
+    #[Required]
     public int $shortBreakDuration;
+    #[Required]
     public int $longBreakDuration;
 
     public function __construct(array $data = [])

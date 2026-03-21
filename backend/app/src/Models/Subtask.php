@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use App\Framework\Model;
+use App\Framework\Annotations\Required;
 
 class Subtask extends Model
 {
     public ?int $subtaskID;
+    #[Required]
     public int $taskID;
+    #[Required]
     public string $title;
+    #[Required]
     public bool $isCompleted;
-    public bool $isDeleted;
 
     public function __construct(array $data = [])
     {
@@ -18,6 +21,5 @@ class Subtask extends Model
         $this->taskID = $data['taskID'] ?? 0;
         $this->title = $data['title'] ?? '';
         $this->isCompleted = $data['isCompleted'] ?? false;
-        $this->isDeleted = $data['isDeleted'] ?? false;
     }
 }
