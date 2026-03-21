@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Repositories\IUserRepository;
+use App\Repositories\Interfaces\IUserRepository;
 use App\Repositories\UserRepository;
 
 class UserService implements IUserService
@@ -13,14 +13,6 @@ class UserService implements IUserService
     public function __construct()
     {
         $this->repository = new UserRepository();
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getAll(): array
-    {
-        return $this->repository->getAll();
     }
 
     public function getById(int $id): ?User
@@ -41,10 +33,5 @@ class UserService implements IUserService
     public function update(User $user): bool
     {
         return $this->repository->update($user);
-    }
-
-    public function delete(int $id): bool
-    {
-        return $this->repository->delete($id);
     }
 }

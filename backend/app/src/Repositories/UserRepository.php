@@ -1,61 +1,68 @@
 <?php
 
-// NOTE: we are using a simplified file based storage for demo purposes
-// For your assignment, you should use a database
-
 namespace App\Repositories;
 
+use App\Framework\Repository;
 use App\Models\User;
-use App\Utils\JsonStore;
+use App\Repositories\Interfaces\IUserRepository;
 
-class UserRepository implements IUserRepository
+class UserRepository extends Repository implements IUserRepository
 {
-    private JsonStore $store;
-    private const DATA_FILE = __DIR__ . '/../data/users.json';
-
-    public function __construct()
+    public function getById(int $userID): ?User
     {
-        $this->store = new JsonStore(self::DATA_FILE, User::class);
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getAll(): array
-    {
-        return $this->store->getAll();
-    }
-
-    public function getById(int $id): ?User
-    {
-        return $this->store->getById($id);
+        $sql = 'SELECT * FROM Users
+                WHERE userID = :userID';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute(['userID' => $userID]);
+        $result = $stmt->fetch();
+        return $result ? new User($result) : null;
     }
 
     public function getByEmail(string $email): ?User
     {
-        // Note: this is an inefficient query, this is only for demonstration purposes
-        $users = $this->store->getAll();
-        foreach ($users as $user) {
-            if ($user->email === $email) {
-                return $user;
-            }
-        }
-        return null;
+        $sql = 'SELECT * FROM Users
+                WHERE email = :email';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch();
+        return $result ? new User($result) : null;
     }
 
     public function create(User $user): User
     {
-        $this->store->create($user);
-        return $user;
+        $userSql = '
+            INSERT INTO Users (username, email, password, role)
+            VALUES (:username, :email, :password, :role)';
+        $timerConfigSql = '
+            INSERT INTO TimerConfig (userID)
+            VALUES (:userID)';
+        $stmt = $this->getConnection()->prepare($userSql);
+        $stmt->bindValue(':username', $user->username, \PDO::PARAM_STR);
+        $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
+        $stmt->bindValue(':password', $user->password, \PDO::PARAM_STR);
+        $stmt->bindValue(':role', $user->role->value, \PDO::PARAM_STR);
+        $stmt->execute();
+        $userID = (int)$this->getConnection()->lastInsertId();
+
+        $stmt = $this->getConnection()->prepare($timerConfigSql);
+        $stmt->bindValue(':userID', $userID, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_CLASS, User::class);
     }
 
     public function update(User $user): bool
     {
-        return $this->store->update($user);
-    }
+        $sql = 'UPDATE Users
+                SET email = :email,
+                    password = :password,
+                    username = :username
+                WHERE userID = :userID';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
+        $stmt->bindValue(':password', $user->password, \PDO::PARAM_STR);
+        $stmt->bindValue(':username', $user->username, \PDO::PARAM_STR);
+        $stmt->bindValue(':userID', $user->userID, \PDO::PARAM_INT);
 
-    public function delete(int $id): bool
-    {
-        return $this->store->delete($id);
+        return $stmt->execute();
     }
 }
