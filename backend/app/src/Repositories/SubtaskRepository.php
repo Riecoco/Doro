@@ -13,12 +13,13 @@ class SubtaskRepository extends Repository implements ISubtaskRepository
     public function create(Subtask $subtask): Subtask
     {
         $sql = '
-            INSERT INTO Subtasks (taskID, title) 
-            VALUES (:taskID, :title)';
+            INSERT INTO Subtasks (taskID, title, isCompleted) 
+            VALUES (:taskID, :title, :isCompleted)';
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([
             'taskID' => $subtask->taskID,
             'title' => $subtask->title,
+            'isCompleted' => (int)$subtask->isCompleted,
         ]);
         $subtask->subtaskID = (int)$this->getConnection()->lastInsertId();
         return $this->getById($subtask->subtaskID);

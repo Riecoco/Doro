@@ -4,9 +4,7 @@ namespace App\Framework;
 
 class Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     protected function sendSuccessResponse($data = [], $code = 200)
     {
@@ -43,14 +41,11 @@ class Controller
     {
         $data = $this->getPostData();
 
-        $instance = new $className();
-        
-        foreach ($data as $key => $value) {
-            if (property_exists($instance, $key)) {
-                $instance->$key = $value;
-            }
+        if ($data === null) {
+            return null;
         }
 
-        return $instance;
+        // Pass data to constructor instead of setting properties manually
+        return new $className($data);
     }
 }

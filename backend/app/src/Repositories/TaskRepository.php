@@ -21,10 +21,10 @@ class TaskRepository extends Repository implements ITaskRepository
             Se.sessionID, Se.startTime, Se.endTime, Se.isCompleted,
             TC.timerConfigID, TC.userID, TC.shortBreakDuration, TC.longBreakDuration, TC.focusDuration
             FROM Tasks as T
-            JOIN Subtasks as S ON T.taskID = S.taskID
-            JOIN Sessions as Se ON T.taskID = Se.taskID
-            JOIN TimerConfigs as TC ON Se.sessionID = TC.sessionID
-            WHERE userID = :userID AND T.isDeleted = 0";
+            LEFT JOIN Subtasks as S ON T.taskID = S.taskID
+            LEFT JOIN Sessions as Se ON T.taskID = Se.taskID
+            LEFT JOIN TimerConfigs as TC ON Se.timerConfigID = TC.timerConfigID
+            WHERE T.userID = :userID AND T.isCompleted = 0";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute(['userID' => $userID]);
         $tasks = [];
@@ -67,7 +67,7 @@ class TaskRepository extends Repository implements ITaskRepository
     {
         $sql = "
             SELECT * FROM Tasks 
-            WHERE taskID = :taskID AND isDeleted = 0";
+            WHERE taskID = :taskID";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute(['taskID' => $taskID]);
         $data = $stmt->fetch();
@@ -77,14 +77,15 @@ class TaskRepository extends Repository implements ITaskRepository
     public function create(Task $task): Task
     {
         $sql = "
-            INSERT INTO Tasks (userID, title, description, isCompleted) 
-            VALUES (:userID, :title, :description, :isCompleted)";
+            INSERT INTO Tasks (userID, title, description, isCompleted, estimatedCycles) 
+            VALUES (:userID, :title, :description, :isCompleted, :estimatedCycles)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([
             'userID' => $task->user?->userID,
             'title' => $task->title,
             'description' => $task->description,
-            'isCompleted' => $task->isCompleted,
+            'isCompleted' => (int)$task->isCompleted,
+            'estimatedCycles' => $task->estimatedCycles,
         ]);
         $taskID = (int)$this->getConnection()->lastInsertId();
         $task->taskID = $taskID;
@@ -94,7 +95,7 @@ class TaskRepository extends Repository implements ITaskRepository
     public function update(Task $task): bool
     {
         $sql = "UPDATE Tasks 
-                SET title = :title, description = :description, isCompleted = :isCompleted 
+                SET title = :title, description = :description, isCompleted = :isCompleted, estimatedCycles = :estimatedCycles
                 WHERE taskID = :taskID";
         $stmt = $this->getConnection()->prepare($sql);
         return $stmt->execute([
@@ -102,6 +103,7 @@ class TaskRepository extends Repository implements ITaskRepository
             'title' => $task->title,
             'description' => $task->description,
             'isCompleted' => $task->isCompleted,
+            'estimatedCycles' => $task->estimatedCycles,
         ]);
     }
 

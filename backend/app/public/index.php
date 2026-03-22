@@ -35,13 +35,45 @@ use function FastRoute\simpleDispatcher;
 /**
  * Define the routes for the application.
  */
-$dispatcher = simpleDispatcher(function (RouteCollector $r) {
-    // Auth routes
-    $r->addRoute('POST', '/auth/login', ['App\Controllers\AuthController', 'login']);
-    $r->addRoute('POST', '/auth/register', ['App\Controllers\AuthController', 'register']);
-    $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'currentUser']);
-});
+$dispatcher = simpleDispatcher(
+    function (RouteCollector $r) {
+        // Auth routes
+        $r->addRoute('POST', '/auth/login', ['App\Controllers\AuthController', 'login']);
+        $r->addRoute('POST', '/auth/register', ['App\Controllers\AuthController', 'register']);
+        $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'currentUser']);
 
+        // User routes
+        $r->addRoute('POST', '/users', ['App\Controllers\UserController', 'getById']);
+        $r->addRoute('PUT', '/users/{id:\d+}', ['App\Controllers\UserController', 'update']);
+
+        // Task routes
+        $r->addRoute('POST', '/tasks', ['App\Controllers\TaskController', 'create']);
+        $r->addRoute('GET', '/tasks/{userID:\d+}/tasks', ['App\Controllers\TaskController', 'getAll']);
+        $r->addRoute('GET', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'getById']);
+        $r->addRoute('PUT', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
+        $r->addRoute('DELETE', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'delete']);
+
+        // Subtask routes
+        $r->addRoute('POST', '/subtasks', ['App\Controllers\SubtaskController', 'create']);
+        $r->addRoute('PUT', '/subtasks/{id:\d+}', ['App\Controllers\SubtaskController', 'update']);
+        $r->addRoute('DELETE', '/subtasks/{id:\d+}', ['App\Controllers\SubtaskController', 'delete']);
+
+        // Session routes
+        $r->addRoute('POST', '/sessions', ['App\Controllers\SessionController', 'create']);
+
+        // TimerConfig routes
+        $r->addRoute('GET', '/timer-configs/{id:\d+}', ['App\Controllers\TimerConfigController', 'get']);
+        $r->addRoute('PUT', '/timer-configs', ['App\Controllers\TimerConfigController', 'reset']);
+        $r->addRoute('PUT', '/timer-configs/{id:\d+}', ['App\Controllers\TimerConfigController', 'update']);
+
+        // ThemePreset routes
+        $r->addRoute('GET', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'getById']);
+        $r->addRoute('GET', '/theme-presets', ['App\Controllers\ThemePresetController', 'getAll']);
+        $r->addRoute('POST', '/theme-presets', ['App\Controllers\ThemePresetController', 'create']);
+        $r->addRoute('PUT', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'update']);
+        $r->addRoute('DELETE', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'delete']);
+    }
+);
 
 /**
  * Get the request method and URI from the server variables and invoke the dispatcher.

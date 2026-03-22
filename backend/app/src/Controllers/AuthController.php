@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Models\UserDTO;
 use App\Exceptions\UserAlreadyExistsException;
-use App\Services\IAuthService;
+use App\Services\Interfaces\IAuthService;
 use App\Services\AuthService;
 use App\Framework\Controller;
 
@@ -63,11 +63,10 @@ class AuthController extends Controller
             // DTOs (data transfer objects) are preferred when returning data to the client
             $userDTO = new UserDTO($user);
             return $this->sendSuccessResponse($userDTO, 201);
-
         } catch (UserAlreadyExistsException $e) {
             return $this->sendErrorResponse($e->getMessage(), 409); // 409: Conflict
         } catch (\Exception $e) {
-            return $this->sendErrorResponse('Internal server error', 500);
+            return $this->sendErrorResponse($e->getMessage(), 500);
         }
     }
 
@@ -76,7 +75,7 @@ class AuthController extends Controller
         try {
 
             // Get token from Authorization header
-            if(!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
                 return $this->sendErrorResponse('Authorization header is required', 401);
             }
 

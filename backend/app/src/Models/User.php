@@ -26,7 +26,9 @@ class User extends Model
     {
         $this->userID = $data['userID'] ?? null;
         $this->username = $data['username'] ?? '';
-        $this->role = $data['role'] ? Role::from($data['role']) : Role::User;
+        $this->role = isset($data['role'])
+            ? Role::tryFrom($data['role'])
+            : Role::User;
         $this->email = $data['email'] ?? '';
         $this->password = $data['password'] ?? '';
         $this->spotifyAccessToken = $data['spotifyAccessToken'] ?? null;

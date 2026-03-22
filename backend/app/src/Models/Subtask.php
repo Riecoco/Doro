@@ -20,6 +20,6 @@ class Subtask extends Model
         $this->subtaskID = $data['subtaskID'] ?? null;
         $this->taskID = $data['taskID'] ?? 0;
         $this->title = $data['title'] ?? '';
-        $this->isCompleted = $data['isCompleted'] ?? false;
+        $this->isCompleted = (bool) ($data['isCompleted'] ?? false);
     }
 }
