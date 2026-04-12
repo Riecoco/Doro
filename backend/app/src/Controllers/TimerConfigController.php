@@ -7,68 +7,78 @@ use App\Framework\Controller;
 use App\Services\TimerConfigService;
 use App\Services\Interfaces\ITimerConfigService;
 
-class TimerConfigController extends Controller
+class TimerConfigController extends BaseController
 {
     private ITimerConfigService $timerConfigService;
 
     public function __construct()
     {
+        parent::__construct();
         $this->timerConfigService = new TimerConfigService();
     }
 
-    public function reset()
+    public function create()
     {
-        $userId = $_SESSION['user_id'] ?? null;
-        if (!$userId) {
-            return $this->sendErrorResponse('Unauthorized', 401);
-        }
+        $user = $this->authenticateUser();
         try {
-            $result = $this->timerConfigService->resetForUser($userId);
-            if ($result) {
-                return $this->sendSuccessResponse(['message' => 'Timer configuration reset successfully']);
-            } else {
-                return $this->sendErrorResponse('Failed to reset timer configuration', 500);
-            }
+            $config = $this->mapPostDataToClass(TimerConfig::class);
+            $config->userID = $user->id;
+            $createdConfig = $this->timerConfigService->create($config);
+            return $this->sendSuccessResponse($createdConfig, 201);
         } catch (\Exception $e) {
-            return $this->sendErrorResponse('Internal server error', 500);
+            return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
     }
 
-    public function get()
+    public function get($vars=[])
     {
-        $userId = $_SESSION['user_id'] ?? null;
-        if (!$userId) {
-            return $this->sendErrorResponse('Unauthorized', 401);
-        }
+        $user = $this->authenticateUser();
         try {
-            $config = $this->timerConfigService->getForUser($userId);
+            $config = $this->timerConfigService->getById($vars['id']);
             if ($config) {
                 return $this->sendSuccessResponse($config);
             } else {
                 return $this->sendErrorResponse('Timer configuration not found', 404);
             }
         } catch (\Exception $e) {
-            return $this->sendErrorResponse('Internal server error', 500);
+            return $this->sendErrorResponse('Oops, something went wrong!', 500);
+        }
+    }
+    
+    public function getAll()
+    {
+        $user = $this->authenticateUser();
+        try {
+            $configs = $this->timerConfigService->getAllByUserID($user->id);
+            return $this->sendSuccessResponse($configs);
+        } catch (\Exception $e) {
+            return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
     }
 
+
     public function update()
     {
-        $userId = $_SESSION['user_id'] ?? null;
-        if (!$userId) {
-            return $this->sendErrorResponse('Unauthorized', 401);
-        }
+        $user = $this->authenticateUser();
         try {
             $config = $this->mapPostDataToClass(TimerConfig::class);
-            $config->userID = $userId;
-            $updatedConfig = $this->timerConfigService->updateForUser($config);
-            if ($updatedConfig) {
-                return $this->sendSuccessResponse($updatedConfig);
+            if (isset($config->timerConfigID)) {
+                if (isset($_POST['reset']) && $_POST['reset'] === 'true') {
+                    $result = $this->timerConfigService->reset($config);
+                    return $result
+                        ? $this->sendSuccessResponse(['message' => 'Timer configuration reset successfully'])
+                        : $this->sendErrorResponse('Failed to reset timer configuration', 500);
+                }
+
+                $updatedConfig = $this->timerConfigService->update($config);
+                return $updatedConfig
+                    ? $this->sendSuccessResponse(['message' => 'Timer configuration updated successfully'])
+                    : $this->sendErrorResponse('Failed to update timer configuration', 500);
             } else {
-                return $this->sendErrorResponse('Failed to update timer configuration', 500);
+                return $this->create();
             }
         } catch (\Exception $e) {
-            return $this->sendErrorResponse('Internal server error', 500);
+            return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
     }
 }

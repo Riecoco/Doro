@@ -3,16 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\Subtask;
-use App\Framework\Controller;
+use App\Controllers\BaseController;
 use App\Services\SubtaskService;
 use App\Services\Interfaces\ISubtaskService;
 
-class SubtaskController extends Controller
+class SubtaskController extends BaseController
 {
     private ISubtaskService $subtaskService;
 
     public function __construct()
     {
+        parent::__construct();
         $this->subtaskService = new SubtaskService();
     }
 

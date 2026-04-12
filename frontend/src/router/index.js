@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../pages/LandingPage.vue';
 import LoginPage from '../pages/LoginPage.vue';
+import HelloWorld from '../pages/HelloWorld.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'Landing',
-    component: LandingPage,
+    name: 'HelloWorld',
+    component: HelloWorld,
   },
   {
     path: '/login',

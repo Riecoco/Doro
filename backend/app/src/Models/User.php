@@ -19,6 +19,7 @@ class User extends Model
     #[Required]
     public string $password;
     public ?string $spotifyAccessToken;
+    // to do just imagepath + filename in one property
     public ?string $customBgImgFilepath;
     public ?string $customBgImgFilename;
 

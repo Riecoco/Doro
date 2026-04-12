@@ -7,12 +7,13 @@ use App\Framework\Controller;
 use App\Services\SessionService;
 use App\Services\Interfaces\ISessionService;
 
-class SessionController extends Controller
+class SessionController extends BaseController
 {
     private ISessionService $sessionService;
 
     public function __construct()
     {
+        parent::__construct();
         $this->sessionService = new SessionService();
     }
 

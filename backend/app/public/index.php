@@ -42,13 +42,16 @@ $dispatcher = simpleDispatcher(
         $r->addRoute('POST', '/auth/register', ['App\Controllers\AuthController', 'register']);
         $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'currentUser']);
 
-        // User routes
-        $r->addRoute('POST', '/users', ['App\Controllers\UserController', 'getById']);
-        $r->addRoute('PUT', '/users/{id:\d+}', ['App\Controllers\UserController', 'update']);
+        // Quote routes
+        $r->addRoute('GET', '/quotes', ['App\Controllers\QuoteController','getAll']);
+        $r->addRoute('GET', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'getById']);
+        $r->addRoute('POST', '/quotes', ['App\Controllers\QuoteController', 'create']);
+        $r->addRoute('PUT', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'update']);
+        $r->addRoute('DELETE', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'delete']);
 
         // Task routes
         $r->addRoute('POST', '/tasks', ['App\Controllers\TaskController', 'create']);
-        $r->addRoute('GET', '/tasks/{userID:\d+}/tasks', ['App\Controllers\TaskController', 'getAll']);
+        $r->addRoute('GET', '/tasks', ['App\Controllers\TaskController', 'getAll']);
         $r->addRoute('GET', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'getById']);
         $r->addRoute('PUT', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
         $r->addRoute('DELETE', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'delete']);
@@ -62,9 +65,10 @@ $dispatcher = simpleDispatcher(
         $r->addRoute('POST', '/sessions', ['App\Controllers\SessionController', 'create']);
 
         // TimerConfig routes
-        $r->addRoute('GET', '/timer-configs/{id:\d+}', ['App\Controllers\TimerConfigController', 'get']);
-        $r->addRoute('PUT', '/timer-configs', ['App\Controllers\TimerConfigController', 'reset']);
-        $r->addRoute('PUT', '/timer-configs/{id:\d+}', ['App\Controllers\TimerConfigController', 'update']);
+        $r->addRoute('GET', '/timerConfigs', ['App\Controllers\TimerConfigController', 'getAll']);
+        $r->addRoute('GET', '/timerConfigs/{id:\d+}', ['App\Controllers\TimerConfigController', 'get']);
+        $r->addRoute('POST', '/timerConfigs', ['App\Controllers\TimerConfigController', 'create']);
+        $r->addRoute('PUT', '/timerConfigs/{id:\d+}', ['App\Controllers\TimerConfigController', 'update']);
 
         // ThemePreset routes
         $r->addRoute('GET', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'getById']);

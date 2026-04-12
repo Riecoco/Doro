@@ -11,7 +11,7 @@ class Subtask extends Model
     #[Required]
     public int $taskID;
     #[Required]
-    public string $title;
+    public string $subtaskTitle;
     #[Required]
     public bool $isCompleted;
 
@@ -19,7 +19,7 @@ class Subtask extends Model
     {
         $this->subtaskID = $data['subtaskID'] ?? null;
         $this->taskID = $data['taskID'] ?? 0;
-        $this->title = $data['title'] ?? '';
+        $this->subtaskTitle = $data['subtaskTitle'] ?? '';
         $this->isCompleted = (bool) ($data['isCompleted'] ?? false);
     }
 }

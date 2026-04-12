@@ -15,19 +15,33 @@ class TimerConfigService implements ITimerConfigService
     {
         $this->repository = new TimerConfigRepository();
     }
-
-    public function resetForUser(int $userID): bool
+    public function create(TimerConfig $config): TimerConfig
     {
-        return $this->repository->resetForUser($userID);
+        return $this->repository->create($config);
     }
 
-    public function getForUser(int $userID): TimerConfig
+    public function reset(TimerConfig $config): bool
     {
-        return $this->repository->getForUser($userID);
+        return $this->repository->reset($config->timerConfigID);
     }
 
-    public function updateForUser(TimerConfig $timerConfig): bool
+    /**
+     * Summary of getAllByUserID
+     * @param int $userID
+     * @return TimerConfig[]
+     */
+    public function getAllByUserID(int $userID): array
     {
-        return $this->repository->updateForUser($timerConfig);
+        return $this->repository->getAllByUserID($userID);
+    }
+
+    public function getById(int $timerConfigID): ?TimerConfig
+    {
+        return $this->repository->getById($timerConfigID);
+    }
+
+    public function update(TimerConfig $timerConfig): bool
+    {
+        return $this->repository->update($timerConfig);
     }
 }

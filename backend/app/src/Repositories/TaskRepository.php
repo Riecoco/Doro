@@ -17,7 +17,7 @@ class TaskRepository extends Repository implements ITaskRepository
     {
         $sql = "
             SELECT T.taskID, T.userID, T.title, T.description, T.isCompleted, T.estimatedCycles,
-            S.subtaskID, S.title, S.isCompleted,
+            S.subtaskID, S.subtaskTitle, S.isCompleted,
             Se.sessionID, Se.startTime, Se.endTime, Se.isCompleted,
             TC.timerConfigID, TC.userID, TC.shortBreakDuration, TC.longBreakDuration, TC.focusDuration
             FROM Tasks as T
@@ -51,7 +51,7 @@ class TaskRepository extends Repository implements ITaskRepository
                 $task->sessions[] = new Session($results);
             }
         }
-        // check if subtask exists and if it already exists in task subtasks
+        // check if subtask already exists in task subtasks
         if ($results['subtaskID']) {
             $subtaskExists = !empty(array_filter(
                 $task->subtasks,
@@ -88,7 +88,6 @@ class TaskRepository extends Repository implements ITaskRepository
             'estimatedCycles' => $task->estimatedCycles,
         ]);
         $taskID = (int)$this->getConnection()->lastInsertId();
-        $task->taskID = $taskID;
         return $this->getById($taskID);
     }
 
@@ -102,7 +101,7 @@ class TaskRepository extends Repository implements ITaskRepository
             'taskID' => $task->taskID,
             'title' => $task->title,
             'description' => $task->description,
-            'isCompleted' => $task->isCompleted,
+            'isCompleted' => (int)$task->isCompleted,
             'estimatedCycles' => $task->estimatedCycles,
         ]);
     }

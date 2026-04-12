@@ -13,12 +13,12 @@ class SubtaskRepository extends Repository implements ISubtaskRepository
     public function create(Subtask $subtask): Subtask
     {
         $sql = '
-            INSERT INTO Subtasks (taskID, title, isCompleted) 
-            VALUES (:taskID, :title, :isCompleted)';
+            INSERT INTO Subtasks (taskID, subtaskTitle, isCompleted) 
+            VALUES (:taskID, :subtaskTitle, :isCompleted)';
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([
             'taskID' => $subtask->taskID,
-            'title' => $subtask->title,
+            'subtaskTitle' => $subtask->subtaskTitle,
             'isCompleted' => (int)$subtask->isCompleted,
         ]);
         $subtask->subtaskID = (int)$this->getConnection()->lastInsertId();
@@ -40,11 +40,11 @@ class SubtaskRepository extends Repository implements ISubtaskRepository
             return false;
         }
         $sql = 'UPDATE Subtasks 
-                SET title = :title, isCompleted = :isCompleted 
+                SET subtaskTitle = :subtaskTitle, isCompleted = :isCompleted 
                 WHERE subtaskID = :subtaskID';
         $stmt = $this->getConnection()->prepare($sql);
         return $stmt->execute([
-            'title' => $subtask->title,
+            'subtaskTitle' => $subtask->subtaskTitle,
             'isCompleted' => (int)$subtask->isCompleted,
             'subtaskID' => $subtask->subtaskID
         ]);

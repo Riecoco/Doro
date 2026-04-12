@@ -7,14 +7,15 @@ use App\Models\UserDTO;
 use App\Exceptions\UserAlreadyExistsException;
 use App\Services\Interfaces\IAuthService;
 use App\Services\AuthService;
-use App\Framework\Controller;
+use App\Controllers\BaseController;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
     private IAuthService $authService;
 
     public function __construct()
     {
+        parent::__construct();
         $this->authService = new AuthService();
     }
 
@@ -67,36 +68,6 @@ class AuthController extends Controller
             return $this->sendErrorResponse($e->getMessage(), 409); // 409: Conflict
         } catch (\Exception $e) {
             return $this->sendErrorResponse($e->getMessage(), 500);
-        }
-    }
-
-    public function currentUser()
-    {
-        try {
-
-            // Get token from Authorization header
-            if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
-                return $this->sendErrorResponse('Authorization header is required', 401);
-            }
-
-            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-            $headerParts = explode(' ', $authHeader);
-            if (count($headerParts) !== 2 || strtolower($headerParts[0]) !== 'bearer') {
-                return $this->sendErrorResponse('Invalid authorization header format', 401);
-            }
-            $token = $headerParts[1];
-
-            $user = $this->authService->getUserFromToken($token);
-
-            if (!$user) {
-                return $this->sendErrorResponse('Invalid or expired token', 401);
-            }
-
-            // Return user DTO
-            $userDTO = new UserDTO($user);
-            return $this->sendSuccessResponse($userDTO);
-        } catch (\Exception $e) {
-            return $this->sendErrorResponse('Internal server error', 500);
         }
     }
 }
