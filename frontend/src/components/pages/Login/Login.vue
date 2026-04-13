@@ -39,14 +39,14 @@
 </template>
 
 <script setup>
-import FormInput from "../components/atoms/FormInput/FormInput.vue";
-import SignInButton from "../components/atoms/Button/SignInButton.vue";
+import FormInput from "../../atoms/FormInput/FormInput.vue";
+import SignInButton from "../../atoms/Button/SignInButton.vue";
 import { ref, onMounted } from "vue";
 import axios from "../../../utils/axios.js";
 import { setAuthToken, getAuthToken } from "../../../utils/axios.js";
 import router from "../../../router/index.js";
-import Loader from "@/components/atoms/Loader/Loader.vue";
-import ErrorMessage from "@/components/molecules/Message/ErrorMessage.vue";
+import Loader from "../../atoms/Loader/Loader.vue";
+import ErrorMessage from "../../molecules/Message/ErrorMessage.vue";
 
 const loading = ref(true);
 const user = ref(null);

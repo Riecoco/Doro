@@ -51,8 +51,8 @@
 
 <script setup>
 import { RouterLink } from "vue-router";
-import ArrowToTopRight from "../components/atoms/Icons/ArrowToTopRight.vue";
-import FormInput from "../components/atoms/FormInput/FormInput.vue";
+import ArrowToTopRight from "../../atoms/Icons/ArrowToTopRight.vue";
+import FormInput from "../../atoms/FormInput/FormInput.vue";
 
 const props = defineProps({
   user: {

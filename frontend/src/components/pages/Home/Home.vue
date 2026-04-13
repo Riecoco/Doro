@@ -176,16 +176,16 @@ import { Duration } from "luxon";
 import axios from "../../../utils/axios.js";
 import { setAuthToken, getAuthToken } from "../../../utils/axios.js";
 import { useCountdown } from "@vueuse/core";
-import MenuButton from "../components/atoms/Button/MenuButton.vue";
-import EditIcon from "../components/atoms/Icons/EditIcon.vue";
-import MusicNoteIcon from "../components/atoms/Icons/MusicNoteIcon.vue";
-import GearIcon from "../components/atoms/Icons/GearIcon.vue";
-import SixDots from "../components/atoms/Icons/SixDots.vue";
-import SelectTimerButton from "../components/atoms/Button/SelectTimerButton.vue";
-import CycleIcon from "../components/atoms/Icons/CycleIcon.vue";
-import Play from "../components/atoms/Icons/Play.vue";
-import Pause from "../components/atoms/Icons/Pause.vue";
-import Settings from "./Settings.vue";
+import MenuButton from "../../atoms/Button/MenuButton.vue";
+import EditIcon from "../../atoms/Icons/EditIcon.vue";
+import MusicNoteIcon from "../../atoms/Icons/MusicNoteIcon.vue";
+import GearIcon from "../../atoms/Icons/GearIcon.vue";
+import SixDots from "../../atoms/Icons/SixDots.vue";
+import SelectTimerButton from "../../atoms/Button/SelectTimerButton.vue";
+import CycleIcon from "../../atoms/Icons/CycleIcon.vue";
+import Play from "../../atoms/Icons/Play.vue";
+import Pause from "../../atoms/Icons/Pause.vue";
+import Settings from "../../organisms/Settings/Settings.vue";
 
 // use timer config values later to set the initial duration of the timer.
 // db will automatically store time in seconds, so we won't need convert when fetching,
@@ -265,7 +265,7 @@ function toggleMenu(index) {
   activeMenuIndex.value = activeMenuIndex.value === index ? -1 : index;
 }
 
-const tasks = ref([]);
+const tasks = ref(null);
 const user = ref(null);
 onMounted(async () => {
   try {
