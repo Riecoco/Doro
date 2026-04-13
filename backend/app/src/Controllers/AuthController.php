@@ -70,4 +70,15 @@ class AuthController extends BaseController
             return $this->sendErrorResponse($e->getMessage(), 500);
         }
     }
+
+    public function loggedInUser()
+    {
+        $userDTO = parent::currentUser();
+        
+        if (!$userDTO) {
+            return; // Error response already sent by parent
+        }
+
+        return $this->sendSuccessResponse($userDTO);
+    }
 }

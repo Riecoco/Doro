@@ -152,33 +152,7 @@
                 v-if="activeMenuIndex === 2"
                 class="w-64 sm:w-80 md:w-100 lg:w-150 p-3 mb-7 bg-black/10 backdrop-blur-md text-white border border-white/20 rounded-lg menu right"
               >
-                <form
-                  @submit.prevent="handleSubmit"
-                  class="mt-4 text-white flex flex-col items-start space-y-2"
-                >
-                  <input
-                    type="number"
-                    name="minutes"
-                    min="0"
-                    step="1"
-                    placeholder="Minutes"
-                    class="border p-2 rounded-md"
-                  />
-                  <input
-                    type="number"
-                    name="seconds"
-                    min="0"
-                    step="1"
-                    placeholder="Seconds"
-                    class="border p-2 rounded-md"
-                  />
-                  <button
-                    type="submit"
-                    class="mt-4 bg-blue-600 text-white py-2 px-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                  >
-                    Apply
-                  </button>
-                </form>
+                <Settings @logout="handleLogout" :user="user" />
               </section>
             </Transition>
             <MenuButton
@@ -196,18 +170,22 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import router from "../../../router/index.js";
 import { Duration } from "luxon";
+import axios from "../../../utils/axios.js";
+import { setAuthToken, getAuthToken } from "../../../utils/axios.js";
 import { useCountdown } from "@vueuse/core";
-import MenuButton from "./MenuButton.vue";
-import EditIcon from "./EditIcon.vue";
-import MusicNoteIcon from "./MusicNoteIcon.vue";
-import GearIcon from "./GearIcon.vue";
-import SixDots from "./SixDots.vue";
-import SelectTimerButton from "./SelectTimerButton.vue";
-import CycleIcon from "./CycleIcon.vue";
-import Play from "./Play.vue";
-import Pause from "./Pause.vue";
+import MenuButton from "../components/atoms/Button/MenuButton.vue";
+import EditIcon from "../components/atoms/Icons/EditIcon.vue";
+import MusicNoteIcon from "../components/atoms/Icons/MusicNoteIcon.vue";
+import GearIcon from "../components/atoms/Icons/GearIcon.vue";
+import SixDots from "../components/atoms/Icons/SixDots.vue";
+import SelectTimerButton from "../components/atoms/Button/SelectTimerButton.vue";
+import CycleIcon from "../components/atoms/Icons/CycleIcon.vue";
+import Play from "../components/atoms/Icons/Play.vue";
+import Pause from "../components/atoms/Icons/Pause.vue";
+import Settings from "./Settings.vue";
 
 // use timer config values later to set the initial duration of the timer.
 // db will automatically store time in seconds, so we won't need convert when fetching,
@@ -282,12 +260,55 @@ function selectTimerMode(mode) {
   stopTimer();
 }
 
-const activeMenuIndex = ref(null);
+const activeMenuIndex = ref(-1);
 function toggleMenu(index) {
-  activeMenuIndex.value = activeMenuIndex.value === index ? null : index;
+  activeMenuIndex.value = activeMenuIndex.value === index ? -1 : index;
 }
 
 const tasks = ref([]);
+const user = ref(null);
+onMounted(async () => {
+  try {
+    await setUser();
+    await getTasks();
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+  }
+});
+
+const getTasks = async () => {
+  if (!getAuthToken()) return;
+  try {
+    const response = await axios.get("/tasks");
+    if (response.data) {
+      tasks.value = response.data;
+    }
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+  }
+};
+
+async function setUser() {
+  if (!getAuthToken()) return; // don't request if there isn't a token
+
+  try {
+    const response = await axios.get("/auth/me");
+    if (response.data) {
+      user.value = response.data;
+    }
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      return; // do nothing, user will login through settings and then be authenticated
+    }
+    console.error("Error fetching user data:", err);
+  }
+}
+
+const handleLogout = () => {
+  setAuthToken(null);
+  user.value = null;
+  router.push("/");
+};
 </script>
 
 <style scoped>

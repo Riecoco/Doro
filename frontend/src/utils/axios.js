@@ -36,7 +36,6 @@ export function setAuthToken(token) {
     localStorage.setItem('auth_token', token);
   } else {
     localStorage.removeItem('auth_token');
-    router.push('/login');
   }
 }
 

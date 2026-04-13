@@ -46,6 +46,7 @@ import axios, { setAuthToken } from "../utils/axios.js";
 const loading = ref(true);
 const user = ref(null);
 const error = ref("");
+const success = ref("");
 
 onMounted(async () => {
   try {
@@ -67,5 +68,6 @@ const handleLogout = () => {
   setAuthToken(null);
   user.value = null;
   error.value = "";
+  success.value = "You have been logged out.";
 };
 </script>

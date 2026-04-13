@@ -1,1 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
+.font-dm-sans {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.font-dm-sans.text-sm {
+    font-size: 0.875rem;
+    /* 14px */
+}
+
+.font-dm-sans.text-base {
+    font-size: 1rem;
+    /* 16px */
+}
+
+.font-dm-sans.text-lg {
+    font-size: 1.125rem;
+    /* 18px */
+}
+
+/* DM Sans Heading Sizes */
+.font-dm-sans.heading-h1 {
+    font-size: 2rem;
+    /* 32px */
+    font-weight: 700;
+}
+
+.font-dm-sans.heading-h2 {
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: 600;
+}
+
+.font-dm-sans.heading-h3 {
+    font-size: 1.25rem;
+    /* 20px */
+    font-weight: 600;
+}
+
+.font-noto-serif-display {
+    font-family: 'Noto Serif Display', serif;
+}
+
+.font-noto-serif-display.timer {
+    font-size: 6rem;
+    /* 48px */
+}
+
+.font-noto-serif-display.logo {
+    font-size: 2.25rem;
+    /* 36px */
+}

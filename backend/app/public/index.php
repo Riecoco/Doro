@@ -40,7 +40,7 @@ $dispatcher = simpleDispatcher(
         // Auth routes
         $r->addRoute('POST', '/auth/login', ['App\Controllers\AuthController', 'login']);
         $r->addRoute('POST', '/auth/register', ['App\Controllers\AuthController', 'register']);
-        $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'currentUser']);
+        $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'loggedInUser']);
 
         // Quote routes
         $r->addRoute('GET', '/quotes', ['App\Controllers\QuoteController','getAll']);
