@@ -23,7 +23,7 @@ class User extends Model
 
     public function __construct(array $data = [])
     {
-        $this->userID = $data['userID'] ?? null;
+        $this->userID = $data['id'] ?? null;
         $this->username = $data['username'] ?? '';
         $this->role = isset($data['role'])
             ? Role::tryFrom($data['role'])

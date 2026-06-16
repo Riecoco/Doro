@@ -11,9 +11,9 @@ class UserRepository extends Repository implements IUserRepository
     public function getById(int $userID): ?User
     {
         $sql = 'SELECT * FROM Users
-                WHERE userID = :userID';
+                WHERE id = :id';
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute(['userID' => $userID]);
+        $stmt->execute(['id' => $userID]);
         $result = $stmt->fetch();
         return $result ? new User($result) : null;
     }
@@ -49,12 +49,12 @@ class UserRepository extends Repository implements IUserRepository
                 SET email = :email,
                     password = :password,
                     username = :username
-                WHERE userID = :userID';
+                WHERE id = :id';
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
         $stmt->bindValue(':password', $user->password, \PDO::PARAM_STR);
         $stmt->bindValue(':username', $user->username, \PDO::PARAM_STR);
-        $stmt->bindValue(':userID', $user->userID, \PDO::PARAM_INT);
+        $stmt->bindValue(':id', $user->userID, \PDO::PARAM_INT);
 
         return $stmt->execute();
     }
