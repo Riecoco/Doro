@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Quote;
+use App\Models\UpdateQuoteDTO;
 use App\Framework\Repository;
 use App\Repositories\Interfaces\IQuoteRepository;
 
@@ -22,7 +23,7 @@ class QuoteRepository extends Repository implements IQuoteRepository
 
     public function getById(int $id): ?Quote
     {
-        $sql = "SELECT * FROM Quotes WHERE quoteID = :id";
+        $sql = "SELECT * FROM Quotes WHERE id = :id";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch();
@@ -40,24 +41,33 @@ class QuoteRepository extends Repository implements IQuoteRepository
         return array_map(fn($row) => new Quote($row), $stmt->fetchAll());
     }
 
-    public function update(Quote $quote): ?Quote
+    //patch update
+    public function update(UpdateQuoteDTO $dto): ?Quote
     {
-        if (!$quote->quoteID) {
-            return null; // Can't update a quote without an ID
+        if (!$dto->quoteID) {
+            return null;
         }
-        $sql = "UPDATE Quotes SET text = :text, author = :author WHERE quoteID = :id";
+
+        $allowedFields = ['text', 'author'];
+        $fieldsToUpdate = array_filter(
+                            $allowedFields,
+                            fn($field) => $dto->hasField($field)
+                        );
+        $sql = "UPDATE Quotes SET " . implode(', ', array_map(fn($field) => "$field = :$field", $fieldsToUpdate)) . " WHERE id = :id";
+        $values = [];
+        foreach ($fieldsToUpdate as $field) {
+            $values[$field] = $dto->$field;
+        }
+        $values['id'] = $dto->quoteID;
+
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute([
-            ':text' => $quote->text,
-            ':author' => $quote->author,
-            ':id' => $quote->quoteID
-        ]);
-        return $this->getById($quote->quoteID);
+        $stmt->execute($values);
+        return $this->getById($dto->quoteID);
     }
 
     public function delete(int $id): bool
     {
-        $sql = "DELETE FROM Quotes WHERE quoteID = :id";
+        $sql = "DELETE FROM Quotes WHERE id = :id";
         $stmt = $this->getConnection()->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }

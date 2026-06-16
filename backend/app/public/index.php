@@ -46,7 +46,7 @@ $dispatcher = simpleDispatcher(
         $r->addRoute('GET', '/quotes', ['App\Controllers\QuoteController','getAll']);
         $r->addRoute('GET', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'getById']);
         $r->addRoute('POST', '/quotes', ['App\Controllers\QuoteController', 'create']);
-        $r->addRoute('PUT', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'update']);
+        $r->addRoute('PATCH', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'update']);
         $r->addRoute('DELETE', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'delete']);
 
         // Task routes

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Quote;
+use App\Models\UpdateQuoteDTO;
 use App\Services\QuoteService;
 use App\Services\Interfaces\IQuoteService;
 
@@ -58,15 +59,16 @@ class QuoteController extends BaseController
     {
         $this->authenticateAdmin();
         try {
-            $quote = $this->mapPostDataToClass(Quote::class);
-            $quote->quoteID = $vars['id'];
-            $updatedQuote = $this->quoteService->update($quote);
+            $updateDto = $this->mapPostDataToClass(UpdateQuoteDTO::class);
+            $updateDto->quoteID = $vars['id'];
+            $updatedQuote = $this->quoteService->update($updateDto);
             if ($updatedQuote) {
                 return $this->sendSuccessResponse($updatedQuote);
             } else {
                 return $this->sendErrorResponse('Update failed', 500);
             }
         } catch (\Exception $e) {
+            error_log($e->getMessage());
             return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
     }

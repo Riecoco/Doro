@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Quote;
+use App\Models\UpdateQuoteDTO;
 use App\Repositories\QuoteRepository;
 use App\Services\Interfaces\IQuoteService;
 use App\Repositories\Interfaces\IQuoteRepository;
@@ -27,7 +28,6 @@ class QuoteService implements IQuoteService
     }
 
     /**
-     * Summary of getAll
      * @return Quote[]
      */
     public function getAll(): array
@@ -35,9 +35,9 @@ class QuoteService implements IQuoteService
         return $this->quoteRepository->getAll();
     }
 
-    public function update(Quote $quote): ?Quote
+    public function update(UpdateQuoteDTO $dto): ?Quote
     {
-        return $this->quoteRepository->update($quote);
+        return $this->quoteRepository->update($dto);
     }
 
     public function delete(int $id): bool

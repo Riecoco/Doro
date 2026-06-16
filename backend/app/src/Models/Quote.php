@@ -15,7 +15,7 @@ class Quote extends Model
 
     public function __construct($data = [])
     {
-        $this->quoteID = $data['quoteID'] ?? 0;
+        $this->quoteID = $data['id'] ?? 0;
         $this->text = $data['text'] ?? '';
         $this->author = $data['author'] ?? 'Unknown Author';
     }
