@@ -33,9 +33,6 @@ class UserRepository extends Repository implements IUserRepository
         $userSql = '
             INSERT INTO Users (username, email, password, role)
             VALUES (:username, :email, :password, :role)';
-        $timerConfigSql = '
-            INSERT INTO TimerConfigs (userID)
-            VALUES (:userID)';
         $stmt = $this->getConnection()->prepare($userSql);
         $stmt->bindValue(':username', $user->username, \PDO::PARAM_STR);
         $stmt->bindValue(':email', $user->email, \PDO::PARAM_STR);
@@ -43,11 +40,6 @@ class UserRepository extends Repository implements IUserRepository
         $stmt->bindValue(':role', $user->role->value, \PDO::PARAM_STR);
         $stmt->execute();
         $userID = (int)$this->getConnection()->lastInsertId();
-
-        $stmt = $this->getConnection()->prepare($timerConfigSql);
-        $stmt->bindValue(':userID', $userID, \PDO::PARAM_INT);
-        $stmt->execute();
-        $user->userID = $userID;
         return $this->getById($userID);
     }
 

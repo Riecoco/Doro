@@ -14,16 +14,6 @@ class Task extends Model
     public ?string $description;
     #[Required]
     public bool $isCompleted;
-    #[Required]
-    public int $estimatedCycles;
-    /**
-     * @var Subtask[]
-     */
-    public ?array $subtasks;
-    /**
-     * @var Session[]
-     */
-    public ?array $sessions;
 
     public function __construct(array $data = [])
     {
@@ -31,9 +21,6 @@ class Task extends Model
         $this->title = $data['title'] ?? '';
         $this->description = $data['description'] ?? null;
         $this->isCompleted = (bool) ($data['isCompleted'] ?? false);
-        $this->estimatedCycles = $data['estimatedCycles'] ?? 1;
         $this->user = isset($data['userID']) ? new User($data) : null;
-        $this->subtasks = $data['subtasks'] ?? [];
-        $this->sessions = $data['sessions'] ?? [];
     }
 }

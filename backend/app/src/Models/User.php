@@ -19,9 +19,7 @@ class User extends Model
     #[Required]
     public string $password;
     public ?string $spotifyAccessToken;
-    // to do just imagepath + filename in one property
-    public ?string $customBgImgFilepath;
-    public ?string $customBgImgFilename;
+    public ?string $bgPath;
 
     public function __construct(array $data = [])
     {
@@ -33,7 +31,6 @@ class User extends Model
         $this->email = $data['email'] ?? '';
         $this->password = $data['password'] ?? '';
         $this->spotifyAccessToken = $data['spotifyAccessToken'] ?? null;
-        $this->customBgImgFilepath = $data['customBgImgFilepath'] ?? null;
-        $this->customBgImgFilename = $data['customBgImgFilename'] ?? null;
+        $this->bgPath = $data['bgPath'] ?? null;
     }
 }

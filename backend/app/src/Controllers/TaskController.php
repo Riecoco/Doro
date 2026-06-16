@@ -9,18 +9,15 @@ use App\Controllers\BaseController;
 use App\Services\TaskService;
 use App\Services\Interfaces\ITaskService;
 use App\Services\SubtaskService;
-use App\Services\Interfaces\ISubtaskService;
 
 class TaskController extends BaseController
 {
     private ITaskService $taskService;
-    private ISubtaskService $subtaskService;
 
     public function __construct()
     {
         parent::__construct();
         $this->taskService = new TaskService();
-        $this->subtaskService = new SubtaskService();
     }
 
     public function create()
@@ -32,19 +29,7 @@ class TaskController extends BaseController
             // 1. FIRST create the main task to get a taskID for the subtasks
             $createdTask = $this->taskService->create($task);
 
-            // 2. THEN create subtasks, now that taskID exists
-            // put this in the repository/service
-            if (!empty($task->subtasks)) {
-                foreach ($task->subtasks as $subtaskData) {
-                    $subtaskData['taskID'] = $createdTask->taskID; // link to parent task
-                    $subtask = new Subtask($subtaskData);
-                    $this->subtaskService->create($subtask);
-                }
-            }
-
-            // 3. Re-fetch so the response includes the subtasks
-            $fullTask = $this->taskService->getById($createdTask->taskID);
-            return $this->sendSuccessResponse($fullTask, 201);
+            return $this->sendSuccessResponse($createdTask, 201);
         } catch (Exception $e) {
             return $this->sendErrorResponse("Oops, something went wrong!", 500);
         }

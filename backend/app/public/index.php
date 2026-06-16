@@ -56,26 +56,6 @@ $dispatcher = simpleDispatcher(
         $r->addRoute('PUT', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
         $r->addRoute('DELETE', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'delete']);
 
-        // Subtask routes
-        $r->addRoute('POST', '/subtasks', ['App\Controllers\SubtaskController', 'create']);
-        $r->addRoute('PUT', '/subtasks/{id:\d+}', ['App\Controllers\SubtaskController', 'update']);
-        $r->addRoute('DELETE', '/subtasks/{id:\d+}', ['App\Controllers\SubtaskController', 'delete']);
-
-        // Session routes
-        $r->addRoute('POST', '/sessions', ['App\Controllers\SessionController', 'create']);
-
-        // TimerConfig routes
-        $r->addRoute('GET', '/timerConfigs', ['App\Controllers\TimerConfigController', 'getAll']);
-        $r->addRoute('GET', '/timerConfigs/{id:\d+}', ['App\Controllers\TimerConfigController', 'get']);
-        $r->addRoute('POST', '/timerConfigs', ['App\Controllers\TimerConfigController', 'create']);
-        $r->addRoute('PUT', '/timerConfigs/{id:\d+}', ['App\Controllers\TimerConfigController', 'update']);
-
-        // ThemePreset routes
-        $r->addRoute('GET', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'getById']);
-        $r->addRoute('GET', '/theme-presets', ['App\Controllers\ThemePresetController', 'getAll']);
-        $r->addRoute('POST', '/theme-presets', ['App\Controllers\ThemePresetController', 'create']);
-        $r->addRoute('PUT', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'update']);
-        $r->addRoute('DELETE', '/theme-presets/{id:\d+}', ['App\Controllers\ThemePresetController', 'delete']);
     }
 );
 

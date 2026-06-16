@@ -16,51 +16,17 @@ class TaskRepository extends Repository implements ITaskRepository
     public function getAll(int $userID): array
     {
         $sql = "
-            SELECT T.taskID, T.userID, T.title, T.description, T.isCompleted, T.estimatedCycles,
-            S.subtaskID, S.subtaskTitle, S.isCompleted,
-            Se.sessionID, Se.startTime, Se.endTime, Se.isCompleted,
-            TC.timerConfigID, TC.userID, TC.shortBreakDuration, TC.longBreakDuration, TC.focusDuration
+            SELECT T.taskID, T.userID, T.title, T.description, T.isCompleted
             FROM Tasks as T
-            LEFT JOIN Subtasks as S ON T.taskID = S.taskID
-            LEFT JOIN Sessions as Se ON T.taskID = Se.taskID
-            LEFT JOIN TimerConfigs as TC ON Se.timerConfigID = TC.timerConfigID
             WHERE T.userID = :userID AND T.isCompleted = 0";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute(['userID' => $userID]);
         $tasks = [];
         $results = $stmt->fetchAll();
         foreach ($results as $result) {
-            $taskID = $result['taskID'];
-            if (!isset($tasks[$taskID])) {
-                $tasks[$taskID] = new Task($result);
-            }
-            $this->fillTasksWithSubtasksSessionsAndTimerConfigs($tasks[$taskID], $result);
+            $tasks[] = new Task($result);
         }
-        return array_values($tasks);
-    }
-
-    private function fillTasksWithSubtasksSessionsAndTimerConfigs(Task $task, array $results): void
-    {
-        if ($results['sessionID']) {
-            // check if session already exists in task sessions
-            $sessionExists = !empty(array_filter(
-                $task->sessions,
-                fn($session) => $session->sessionID === $results['sessionID']
-            ));
-            if (!$sessionExists) {
-                $task->sessions[] = new Session($results);
-            }
-        }
-        // check if subtask already exists in task subtasks
-        if ($results['subtaskID']) {
-            $subtaskExists = !empty(array_filter(
-                $task->subtasks,
-                fn($subtask) => $subtask->subtaskID === $results['subtaskID']
-            ));
-            if (!$subtaskExists) {
-                $task->subtasks[] = new Subtask($results);
-            }
-        }
+        return $tasks;
     }
 
     public function getById(int $taskID): ?Task
@@ -84,8 +50,7 @@ class TaskRepository extends Repository implements ITaskRepository
             'userID' => $task->user?->userID,
             'title' => $task->title,
             'description' => $task->description,
-            'isCompleted' => (int)$task->isCompleted,
-            'estimatedCycles' => $task->estimatedCycles,
+            'isCompleted' => (int)$task->isCompleted
         ]);
         $taskID = (int)$this->getConnection()->lastInsertId();
         return $this->getById($taskID);
@@ -101,8 +66,7 @@ class TaskRepository extends Repository implements ITaskRepository
             'taskID' => $task->taskID,
             'title' => $task->title,
             'description' => $task->description,
-            'isCompleted' => (int)$task->isCompleted,
-            'estimatedCycles' => $task->estimatedCycles,
+            'isCompleted' => (int)$task->isCompleted
         ]);
     }
 
