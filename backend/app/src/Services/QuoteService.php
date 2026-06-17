@@ -10,6 +10,8 @@ use App\Repositories\Interfaces\IQuoteRepository;
 
 class QuoteService implements IQuoteService
 {
+
+    private const PAGE_SIZE = 10;
     private IQuoteRepository $quoteRepository;
 
     public function __construct()
@@ -29,10 +31,12 @@ class QuoteService implements IQuoteService
 
     /**
      * @return Quote[]
+     * @param int $pageNumber
      */
-    public function getAll(): array
+    public function getAll(int $pageNumber): array
     {
-        return $this->quoteRepository->getAll();
+        $offset = ($pageNumber - 1) * self::PAGE_SIZE;
+        return $this->quoteRepository->getAll($offset, self::PAGE_SIZE);
     }
 
     public function update(UpdateQuoteDTO $dto): ?Quote

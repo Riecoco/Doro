@@ -31,15 +31,23 @@ class QuoteRepository extends Repository implements IQuoteRepository
     }
 
     /**
-     * Summary of getAll
+     * returns a paginated list of quotes
+     * @param int $offset
+     * @param int $limit
      * @return Quote[]
      */
-    public function getAll(): array
-    {
-        $sql = "SELECT * FROM Quotes";
-        $stmt = $this->getConnection()->query($sql);
-        return array_map(fn($row) => new Quote($row), $stmt->fetchAll());
-    }
+    public function getAll(int $offset, int $limit): array
+{
+    $sql = "SELECT * FROM Quotes LIMIT :limit OFFSET :offset";
+    $stmt = $this->getConnection()->prepare($sql);
+
+    $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+
+    $stmt->execute();
+    
+    return array_map(fn($row) => new Quote($row), $stmt->fetchAll());
+}
 
     //patch update
     public function update(UpdateQuoteDTO $dto): ?Quote
@@ -53,7 +61,10 @@ class QuoteRepository extends Repository implements IQuoteRepository
                             $allowedFields,
                             fn($field) => $dto->hasField($field)
                         );
-        $sql = "UPDATE Quotes SET " . implode(', ', array_map(fn($field) => "$field = :$field", $fieldsToUpdate)) . " WHERE id = :id";
+        $sql = "UPDATE Quotes SET " . implode(', ', 
+                                            array_map(fn($field) => "$field = :$field", 
+                                            $fieldsToUpdate))
+                                 . " WHERE id = :id";
         $values = [];
         foreach ($fieldsToUpdate as $field) {
             $values[$field] = $dto->$field;

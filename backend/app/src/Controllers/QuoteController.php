@@ -21,7 +21,8 @@ class QuoteController extends BaseController
     {
         $this->authenticateAdmin();
         try {
-            $quotes = $this->quoteService->getAll();
+            $pageNumber = $this->getPageNumber();
+            $quotes = $this->quoteService->getAll($pageNumber);
             return $this->sendSuccessResponse($quotes);
         } catch (\Exception $e) {
             return $this->sendErrorResponse('Oops, something went wrong!', 500);

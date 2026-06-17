@@ -61,4 +61,13 @@ class BaseController extends Controller
         $user = $this->currentUser();
         return $user && $user->role === Role::Admin ? true : throw new ApplicationException('Admin privileges required');
     }
+
+    protected function getPageNumber(): int
+    {
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) {
+            $page = 1;
+        }
+        return $page;
+    }
 }
