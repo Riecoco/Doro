@@ -5,7 +5,7 @@ import axios from '../utils/axios.js'
 export const useQuotesStore = defineStore('quotes', () => {
     const quotes = ref([]);
     const currentQuote = ref(null);
-    const pageNumber = ref(1);
+    const currentPage = ref(1);
     const totalPages = ref(1);
     const loading = ref(false);
     const error = ref(null);
@@ -51,28 +51,29 @@ export const useQuotesStore = defineStore('quotes', () => {
         }
     }
 
-    async function getAllQuotes() {
+    async function getAllQuotes(page = currentPage.value) {
         loading.value = true;
         error.value = null;
-        quotes.value = [];
-
-        const url = '/quotes';
-        const params = {
-            page: pageNumber
-        }
-        url.search(new URLSearchParams(params).toString());
 
         try {
-            const response = await axios.get(url);
-            quotes.value = response.data.quotes;
-            totalPages.value = response.data.totalPages;
+            const response = await axios.get('/quotes', {
+                params: {
+                    page: page
+                }
+            });
+
+            console.log(response);
+
+            quotes.value = response.data.quotes ?? [];
+            totalPages.value = response.data.totalPages ?? 1;
+            currentPage.value = page;
+
             return quotes.value;
-        }
-        catch (err) {
+        } catch (err) {
             error.value = err.message || 'Failed to fetch quotes';
+            quotes.value = [];
             return [];
-        }
-        finally {
+        } finally {
             loading.value = false;
         }
     }
@@ -144,6 +145,9 @@ export const useQuotesStore = defineStore('quotes', () => {
 
     return {
         quotes,
+        currentQuote,
+        currentPage,
+        totalPages,
         loading,
         error,
         getQuoteById,

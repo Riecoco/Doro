@@ -44,6 +44,7 @@ $dispatcher = simpleDispatcher(
 
         // Quote routes
         $r->addRoute('GET', '/quotes', ['App\Controllers\QuoteController','getAll']);
+        $r->addRoute('GET', '/quotes/random', ['App\Controllers\QuoteController', 'getRandom']);
         $r->addRoute('GET', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'getById']);
         $r->addRoute('POST', '/quotes', ['App\Controllers\QuoteController', 'create']);
         $r->addRoute('PATCH', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'update']);

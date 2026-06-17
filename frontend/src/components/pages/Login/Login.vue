@@ -58,12 +58,15 @@ onMounted(async () => {
   try {
     loading.value = true;
     if (!getAuthToken()) {
-      return; // No token, user can login through form
+      return;
     }
     const response = await axios.get("/auth/me");
     user.value = response.data;
-    setTimeout(() => {}, 1000); // Simulate a short delay for better UX
-    router.push("/");
+    if (user.value.role === "admin") {
+      router.push("/quotes");
+    } else {
+      router.push("/");
+    }
   } catch (err) {
     user.value = null;
     error.value =
@@ -83,8 +86,11 @@ const handleLogin = async () => {
     });
     setAuthToken(response.data.token);
     user.value = response.data.user;
-    setTimeout(() => {}, 1000);
-    router.push("/");
+    if (user.value.role === "admin") {
+      router.push("/quotes");
+    } else {
+      router.push("/");
+    }
   } catch (err) {
     if (err.response?.status === 401) {
       error.value = "Invalid email or password. Please try again.";

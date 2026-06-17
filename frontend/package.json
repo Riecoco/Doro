@@ -19,6 +19,7 @@
     "autoprefixer": "^10.4.27",
     "axios": "^1.13.6",
     "luxon": "^3.7.2",
+    "pinia": "^3.0.4",
     "postcss": "^8.5.9",
     "vue": "^3.5.26",
     "vue-router": "^5.0.3"
@@ -32,13 +33,14 @@
     "@storybook/vue3-vite": "^10.3.5",
     "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-vue": "^6.0.3",
-    "@vitest/browser-playwright": "^4.0.16",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/browser": "^4.1.9",
+    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.9",
     "playwright": "^1.57.0",
     "storybook": "^10.3.5",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.3.1",
     "vite": "^7.3.0",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.9"
   }
 }
