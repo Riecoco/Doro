@@ -47,6 +47,21 @@ class QuoteController extends BaseController
         }
     }
 
+    public function getRandom()
+    {
+        $this->authenticateAdmin();
+        try {
+            $quote = $this->quoteService->getRandom();
+            if ($quote) {
+                return $this->sendSuccessResponse($quote);
+            } else {
+                return $this->sendErrorResponse('No quotes found', 404);
+            }
+        } catch (\Exception $e) {
+            return $this->sendErrorResponse('Oops, something went wrong!', 500);
+        }
+    }
+
     public function create()
     {
         $this->authenticateAdmin();

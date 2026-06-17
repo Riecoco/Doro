@@ -30,6 +30,14 @@ class QuoteRepository extends Repository implements IQuoteRepository
         return $data ? new Quote($data) : null;
     }
 
+    public function getRandom(): ?Quote
+    {
+        $sql = "SELECT * FROM Quotes ORDER BY RAND() LIMIT 1";
+        $stmt = $this->getConnection()->query($sql);
+        $data = $stmt->fetch();
+        return $data ? new Quote($data) : null;
+    }
+
     /**
      * returns a paginated list of quotes
      * @param int $offset

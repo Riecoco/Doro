@@ -29,6 +29,11 @@ class QuoteService implements IQuoteService
         return $this->quoteRepository->getById($id);
     }
 
+    public function getRandom(): ?Quote
+    {
+        return $this->quoteRepository->getRandom();
+    }
+
     /**
      * @return Quote[]
      * @param int $pageNumber
