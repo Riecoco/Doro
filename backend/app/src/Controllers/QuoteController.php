@@ -26,6 +26,9 @@ class QuoteController extends BaseController
             $quotes = $this->quoteService->getAll($pageNumber);
             $totalQuotes = $this->quoteService->getTotalQuotesPages();
             $viewModel = new QuotesViewModel($quotes, $totalQuotes);
+            if(empty($quotes)) {
+                return $this->sendErrorResponse('No quotes found', 404);
+            }
             return $this->sendSuccessResponse($viewModel);
         } catch (\Exception $e) {
             return $this->sendErrorResponse('Oops, something went wrong!', 500);
