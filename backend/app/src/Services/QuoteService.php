@@ -39,6 +39,12 @@ class QuoteService implements IQuoteService
         return $this->quoteRepository->getAll($offset, self::PAGE_SIZE);
     }
 
+    public function getTotalQuotesPages(): int
+    {
+        $totalQuotes = $this->quoteRepository->getTotalQuotes();
+        return (int)ceil($totalQuotes / self::PAGE_SIZE);
+    }
+
     public function update(UpdateQuoteDTO $dto): ?Quote
     {
         return $this->quoteRepository->update($dto);

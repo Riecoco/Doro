@@ -37,17 +37,22 @@ class QuoteRepository extends Repository implements IQuoteRepository
      * @return Quote[]
      */
     public function getAll(int $offset, int $limit): array
-{
-    $sql = "SELECT * FROM Quotes LIMIT :limit OFFSET :offset";
-    $stmt = $this->getConnection()->prepare($sql);
+    {
+        $sql = "SELECT * FROM Quotes LIMIT :limit OFFSET :offset";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        return array_map(fn($row) => new Quote($row), $stmt->fetchAll());
+    }
 
-    $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
-
-    $stmt->execute();
-    
-    return array_map(fn($row) => new Quote($row), $stmt->fetchAll());
-}
+    public function getTotalQuotes(): int
+    {
+        $sql = "SELECT COUNT(*) as count FROM Quotes";
+        $stmt = $this->getConnection()->query($sql);
+        $result = $stmt->fetch();
+        return (int)$result['count'];
+    }
 
     //patch update
     public function update(UpdateQuoteDTO $dto): ?Quote

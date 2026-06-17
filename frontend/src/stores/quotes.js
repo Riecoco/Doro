@@ -5,6 +5,8 @@ import axios from '../utils/axios.js'
 export const useQuotesStore = defineStore('quotes', () => {
     const quotes = ref([]);
     const currentQuote = ref(null);
+    const pageNumber = ref(1);
+    const totalPages = ref(1);
     const loading = ref(false);
     const error = ref(null);
 
@@ -54,9 +56,16 @@ export const useQuotesStore = defineStore('quotes', () => {
         error.value = null;
         quotes.value = [];
 
+        const url = '/quotes';
+        const params = {
+            page: pageNumber
+        }
+        url.search(new URLSearchParams(params).toString());
+
         try {
-            const response = await axios.get('/quotes');
-            quotes.value = response.data;
+            const response = await axios.get(url);
+            quotes.value = response.data.quotes;
+            totalPages.value = response.data.totalPages;
             return quotes.value;
         }
         catch (err) {

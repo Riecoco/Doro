@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Quote;
 use App\Models\UpdateQuoteDTO;
+use App\ViewModels\QuotesViewModel;
 use App\Services\QuoteService;
 use App\Services\Interfaces\IQuoteService;
 
@@ -23,7 +24,9 @@ class QuoteController extends BaseController
         try {
             $pageNumber = $this->getPageNumber();
             $quotes = $this->quoteService->getAll($pageNumber);
-            return $this->sendSuccessResponse($quotes);
+            $totalQuotes = $this->quoteService->getTotalQuotesPages();
+            $viewModel = new QuotesViewModel($quotes, $totalQuotes);
+            return $this->sendSuccessResponse($viewModel);
         } catch (\Exception $e) {
             return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
