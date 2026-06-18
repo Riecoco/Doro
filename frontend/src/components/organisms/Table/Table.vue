@@ -37,6 +37,8 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps({
   tableData: {
     type: Array,
@@ -44,7 +46,9 @@ const props = defineProps({
   },
 });
 
-const headings = Array.from(
-  new Set(props.tableData.flatMap((item) => Object.keys(item))),
+const headings = computed(() =>
+  Array.from(
+    new Set(props.tableData.flatMap((item) => Object.keys(item))),
+  ),
 );
 </script>

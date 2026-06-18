@@ -21,7 +21,7 @@
     </div>
     <div
       v-else
-      @click="handleLogout"
+      @click="authStore.logout()"
       class="rounded-md w-full h-fit flex flex-row justify-between p-3 bg-black/30 hover:bg-white/30"
     >
       <p>Log out</p>
@@ -35,17 +35,6 @@
         <FormInput type="number" label="Long Break" placeholder="15" />
       </div>
     </div>
-    <div>
-      <h4 class="text-lg font-medium">Theme Settings</h4>
-      <div class="flex flex-row space-x-2">
-        <button class="bg-gray-800 text-white px-4 py-2 rounded-md">
-          Cool Theme
-        </button>
-        <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md">
-          Warm Theme
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -53,6 +42,9 @@
 import { RouterLink } from "vue-router";
 import ArrowToTopRight from "../../atoms/Icons/ArrowToTopRight.vue";
 import FormInput from "../../atoms/FormInput/FormInput.vue";
+import { useAuthStore } from "../../../stores/auth";
+
+const authStore = useAuthStore();
 
 const props = defineProps({
   user: {
@@ -61,9 +53,6 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["logout"]);
 
-const handleLogout = () => {
-  emit("logout");
-};
+
 </script>

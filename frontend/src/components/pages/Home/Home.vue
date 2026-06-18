@@ -152,7 +152,7 @@
                 v-if="activeMenuIndex === 2"
                 class="w-64 sm:w-80 md:w-100 lg:w-150 p-3 mb-7 bg-black/10 backdrop-blur-md text-white border border-white/20 rounded-lg menu right"
               >
-                <Settings @logout="handleLogout" :user="user" />
+                <Settings :user="authStore.user" />
               </section>
             </Transition>
             <MenuButton
@@ -174,7 +174,7 @@ import { ref, computed, onMounted } from "vue";
 import router from "../../../router/index.js";
 import { Duration } from "luxon";
 import axios from "../../../utils/axios.js";
-import { setAuthToken, getAuthToken } from "../../../utils/axios.js";
+import { useAuthStore } from "../../../stores/auth.js";
 import { useCountdown } from "@vueuse/core";
 import MenuButton from "../../atoms/Button/MenuButton.vue";
 import EditIcon from "../../atoms/Icons/EditIcon.vue";
@@ -267,48 +267,25 @@ function toggleMenu(index) {
 
 const tasks = ref(null);
 const user = ref(null);
+const authStore = useAuthStore();
+
 onMounted(async () => {
-  try {
-    await setUser();
-    await getTasks();
-  } catch (err) {
-    console.error("Error fetching tasks:", err);
-  }
+  await authStore.fetchUser();
+  user.value = authStore.user;
 });
 
-const getTasks = async () => {
-  if (!getAuthToken()) return;
-  try {
-    const response = await axios.get("/tasks");
-    if (response.data) {
-      tasks.value = response.data;
-    }
-  } catch (err) {
-    console.error("Error fetching tasks:", err);
-  }
-};
+// const getTasks = async () => {
+//   if (!authStore.token) return;
+//   try {
+//     const response = await axios.get("/tasks");
+//     if (response.data) {
+//       tasks.value = response.data;
+//     }
+//   } catch (err) {
+//     console.error("Error fetching tasks:", err);
+//   }
+// };
 
-async function setUser() {
-  if (!getAuthToken()) return; // don't request if there isn't a token
-
-  try {
-    const response = await axios.get("/auth/me");
-    if (response.data) {
-      user.value = response.data;
-    }
-  } catch (err) {
-    if (err.response && err.response.status === 401) {
-      return; // do nothing, user will login through settings and then be authenticated
-    }
-    console.error("Error fetching user data:", err);
-  }
-}
-
-const handleLogout = () => {
-  setAuthToken(null);
-  user.value = null;
-  router.push("/");
-};
 </script>
 
 <style scoped>

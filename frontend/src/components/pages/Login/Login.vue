@@ -43,12 +43,13 @@ import FormInput from "../../atoms/FormInput/FormInput.vue";
 import SignInButton from "../../atoms/Button/SignInButton.vue";
 import { ref, onMounted } from "vue";
 import axios from "../../../utils/axios.js";
-import { setAuthToken, getAuthToken } from "../../../utils/axios.js";
+import useAuthStore from "../../../stores/auth.js";
 import router from "../../../router/index.js";
 import Loader from "../../atoms/Loader/Loader.vue";
 import ErrorMessage from "../../molecules/Message/ErrorMessage.vue";
 
 const loading = ref(true);
+const authStore = useAuthStore();
 const user = ref(null);
 const error = ref("");
 const email = ref("");
@@ -57,21 +58,10 @@ const password = ref("");
 onMounted(async () => {
   try {
     loading.value = true;
-    if (!getAuthToken()) {
-      return;
-    }
-    const response = await axios.get("/auth/me");
-    user.value = response.data;
-    if (user.value.role === "admin") {
-      router.push("/quotes");
-    } else {
-      router.push("/");
-    }
+    await authStore.fetchUser();
+    user.value = authStore.user;
   } catch (err) {
-    user.value = null;
-    error.value =
-      err.response?.data?.error ||
-      "An error occurred while fetching user data.";
+    error.value = err;
   } finally {
     loading.value = false;
   }
@@ -80,25 +70,10 @@ onMounted(async () => {
 const handleLogin = async () => {
   try {
     loading.value = true;
-    const response = await axios.post("/auth/login", {
-      email: email.value,
-      password: password.value,
-    });
-    setAuthToken(response.data.token);
-    user.value = response.data.user;
-    if (user.value.role === "admin") {
-      router.push("/quotes");
-    } else {
-      router.push("/");
-    }
+    await authStore.login(email.value, password.value);
   } catch (err) {
-    if (err.response?.status === 401) {
-      error.value = "Invalid email or password. Please try again.";
-    } else {
-      error.value =
-        err.response?.data?.error || "An error occurred during login.";
-    }
-    router.push("/login");
+    console.error("Login error:", err);
+    error.value = err;
   } finally {
     loading.value = false;
   }

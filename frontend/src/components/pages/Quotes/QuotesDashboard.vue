@@ -17,7 +17,7 @@
         >Back to App<RouterLink to="/"
       /></SignInButton>
       <TitleLogo class="text-2xl">DORO</TitleLogo>
-      <SignInButton class="w-fit p-2" @click="handleLogout()"
+      <SignInButton class="w-fit p-2" @click="authStore.logout()"
         >Log out</SignInButton
       >
     </div>
@@ -93,11 +93,13 @@ import Table from "../../organisms/Table/Table.vue";
 import TitleLogo from "../../atoms/Titles/TitleLogo.vue";
 import { useRouter } from "vue-router";
 import { useQuotesStore } from "../../../stores/quotes";
-import { setAuthToken } from "../../../utils/axios.js";
+import { useAuthStore } from "../../../stores/auth";
+
 import QuoteAction from "../../organisms/QuoteAction/QuoteAction.vue";
 import DeleteModal from "../../organisms/DeleteModal/DeleteModal.vue";
 
 const quotesStore = useQuotesStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const showAddModal = ref(false);
 const showEditModal = ref(false);
@@ -167,11 +169,6 @@ async function handleEdit(quote) {
 function handleDelete() {
   showDeleteModal.value = false
 }
-
-const handleLogout = () => {
-  setAuthToken(null);
-  router.push("/login");
-};
 </script>
 
 <style scoped>
