@@ -5,17 +5,28 @@
       <QuoteAction @submitQuote="handleAdd" action="Add" v-if="showAddModal" @close="showAddModal=false"/>
     </Transition>
     <Transition name="bounce">
-      <QuoteAction @submitQuote="handleEdit" action="Edit" v-if="showEditModal" @close="showEditModal=false"/>
+      <QuoteAction
+        v-if="showEditModal && quotesStore.currentQuote"
+        :quote="quotesStore.currentQuote"
+        @submitQuote="handleEdit"
+        action="Edit"
+        @close="showEditModal=false"
+      />
     </Transition>
     <Transition name="bounce">
-      <DeleteModal @deleteQuote="handleDelete" v-if="showDeleteModal" @close="showDeleteModal=false"/>
+      <DeleteModal
+        v-if="showDeleteModal && quotesStore.currentQuote"
+        :id="getQuoteId(quotesStore.currentQuote)"
+        @deleteQuote="handleDelete"
+        @close="showDeleteModal=false"
+      />
     </Transition>
 
     <!-- Header -->
     <div class="flex flex-row justify-between items-center mb-10 mt-4">
-      <SignInButton class="w-fit p-2"
-        >Back to App<RouterLink to="/"
-      /></SignInButton>
+      <RouterLink to="/">
+        <SignInButton class="w-fit p-2">Back to App</SignInButton>
+      </RouterLink>
       <TitleLogo class="text-2xl">DORO</TitleLogo>
       <SignInButton class="w-fit p-2" @click="authStore.logout()"
         >Log out</SignInButton
@@ -50,14 +61,14 @@
         <template #actions="{ row }">
           <button
             class="text-blue-500 hover:text-blue-700 transition-all"
-            @click="openEditModal(row.id)"
+            @click="openEditModal(row)"
           >
             Edit
           </button>
 
           <button
             class="text-red-500 hover:text-red-700 transition-all ml-4"
-            @click="openDeleteModal(row.id)"
+            @click="openDeleteModal(row)"
           >
             Delete
           </button>
@@ -91,7 +102,6 @@ import SignInButton from "../../atoms/Button/SignInButton.vue";
 import { onMounted, ref } from "vue";
 import Table from "../../organisms/Table/Table.vue";
 import TitleLogo from "../../atoms/Titles/TitleLogo.vue";
-import { useRouter } from "vue-router";
 import { useQuotesStore } from "../../../stores/quotes";
 import { useAuthStore } from "../../../stores/auth";
 
@@ -100,15 +110,9 @@ import DeleteModal from "../../organisms/DeleteModal/DeleteModal.vue";
 
 const quotesStore = useQuotesStore();
 const authStore = useAuthStore();
-const router = useRouter();
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
-const quoteObj = ref({
-  id: null,
-  text:"", 
-  author:""
-})
 
 onMounted(async () => {
   try {
@@ -122,15 +126,19 @@ function openAddModal() {
   showAddModal.value = true;
 }
 
-function openEditModal(id) {
-  // TODO: api call to get quote by id and populate quoteObj
+function openEditModal(row) {
+  quotesStore.currentQuote = row;
   showEditModal.value = true;
 }
 
-function openDeleteModal(id) {
-  // TODO: populate quoteObj with the quote to be deleted
-  quoteObj.value.id = id;
+function openDeleteModal(row) {
+  if (!row) return;
+  quotesStore.currentQuote = row;
   showDeleteModal.value = true;
+}
+
+function getQuoteId(row) {
+  return row.quoteID ?? row.id;
 }
 
 async function goToPreviousPage() {
@@ -147,24 +155,25 @@ async function goToNextPage() {
 
 async function handleAdd(quote) {
   // TODO: turn on loader
-  quoteObj.value.text = quote.text
-  quoteObj.value.author = quote.author
-
-  // TODO: api call to add quote
-  await quotesStore.createQuote(quoteObj.value)
+  await quotesStore.createQuote({
+    text: quote.text,
+    author: quote.author,
+  })
   await quotesStore.getAllQuotes(quotesStore.currentPage)
-
-  // TODO: turn off loader
 
   showAddModal.value = false
 }
 
 async function handleEdit(quote) {
-  // TODO: turn on loader
-  // TODO: api call to edit quote by id with quoteObj
-  // TODO: turn off loader
-  showEditModal.value = false
-};
+  const id = getQuoteId(quotesStore.currentQuote);
+  if (!id) return;
+  await quotesStore.updateQuote(id, {
+    text: quote.text,
+    author: quote.author
+  });
+  await quotesStore.getAllQuotes(quotesStore.currentPage);
+  showEditModal.value = false;
+}
 
 function handleDelete() {
   showDeleteModal.value = false

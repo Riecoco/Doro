@@ -21,7 +21,7 @@
       <tbody>
         <tr
           v-for="row in props.tableData"
-          :key="row.id"
+          :key="row.quoteID ?? row.id"
           class="bg-gray-50 border-b border-gray-200 hover:bg-gray-50"
         >
           <td v-for="heading in headings" :key="heading" class="px-6 py-4">

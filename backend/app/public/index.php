@@ -12,7 +12,7 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (preg_match('/^https?:\/\/(localhost|127\.0\.0\.1|::1)(:\d+)?$/', $origin)) {
     header('Access-Control-Allow-Origin: ' . $origin);
     // Specifies which HTTP methods are allowed when accessing the resource from the origin
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
     // Specifies which HTTP headers can be used when making the actual request
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
     // Allows cookies and authentication credentials to be sent with cross-origin requests

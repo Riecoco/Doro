@@ -11,14 +11,13 @@ class QuoteRepository extends Repository implements IQuoteRepository
 {
     public function create(Quote $quote): Quote
     {
-        $sql = "INSERT INTO Quotes (text, author) VALUES (:text, :author)";
+        $sql = "INSERT INTO Quotes (text, author, createdAt) VALUES (:text, :author, NOW())";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([
             ':text' => $quote->text,
             ':author' => $quote->author
         ]);
-        $quote->quoteID = (int)$this->getConnection()->lastInsertId();
-        return $quote;
+        return $this->getById((int)$this->getConnection()->lastInsertId());
     }
 
     public function getById(int $id): ?Quote
@@ -46,7 +45,7 @@ class QuoteRepository extends Repository implements IQuoteRepository
      */
     public function getAll(int $offset, int $limit): array
     {
-        $sql = "SELECT * FROM Quotes LIMIT :limit OFFSET :offset";
+        $sql = "SELECT * FROM Quotes ORDER BY createdAt DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);

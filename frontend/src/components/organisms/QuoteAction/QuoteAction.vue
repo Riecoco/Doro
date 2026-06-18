@@ -3,17 +3,21 @@ import {ref} from 'vue';
 import Modal from '../../molecules/Modal/Modal.vue';
 import FormInput from '../../atoms/FormInput/FormInput.vue';
 
-const text = ref("");
-const author = ref("");
-
 const props = defineProps({
   action: {
     type: String,
     required: true
+  },
+  quote: {
+    type: Object,
+    default: null
   }
 })
 
 const emit = defineEmits(['submitQuote'])
+
+const text = ref(props.quote?.text ?? "");
+const author = ref(props.quote?.author ?? "");
 
 function submitQuote(){
   emit('submitQuote', {

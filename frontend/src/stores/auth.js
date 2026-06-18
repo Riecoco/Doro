@@ -35,29 +35,29 @@ export const useAuthStore = defineStore("auth", () => {
 
     async function logout() {
         error.value = null;
-        try {
-            await axios.post("/auth/logout");
-            setAuthToken(null);
-            token.value = null;
-            user.value = null;
-            router.push("/login");
-        }
-        catch (err) {
-            error.value = err.response?.data?.message || 'Logout failed';
-        }
+        setAuthToken(null);
+        token.value = null;
+        user.value = null;
+        router.push("/login");
     }
 
     async function fetchUser() {
         if (!getAuthToken()) return;
+        if (user.value) return;
 
         try {
             const response = await axios.get("/auth/me");
             if (response.data) {
             user.value = response.data;
             }
+            if (user.value?.role === "admin") {
+                router.push("/quotes");
+            } else {
+                router.push("/");
+            }
         } catch (err) {
             if (err.response && err.response.status === 401) {
-            return;
+            router.push("/login");
             }
             console.error("Error fetching user data:", err);
         }

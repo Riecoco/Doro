@@ -4,17 +4,18 @@ import { useQuotesStore } from "../../../stores/quotes";
 
 const quotesStore = useQuotesStore();
 
-defineEmits(['deleteQuote'])
+const emit = defineEmits(['deleteQuote'])
 
-defineProps({
+const props = defineProps({
     id: {
-        type: Number,
+        type: [Number, String],
         required: true
     }
 })
 
-function deleteQuote() {
-    quotesStore.deleteQuote(props.id);
+async function deleteQuote() {
+    await quotesStore.deleteQuote(props.id);
+    await quotesStore.getAllQuotes(quotesStore.currentPage);
     emit('deleteQuote');
 }
 

@@ -19,13 +19,15 @@
         <ArrowToTopRight
       /></RouterLink>
     </div>
-    <div
-      v-else
-      @click="authStore.logout()"
-      class="rounded-md w-full h-fit flex flex-row justify-between p-3 bg-black/30 hover:bg-white/30"
-    >
-      <p>Log out</p>
-      <ArrowToTopRight />
+    <div v-else class="flex-col space-y-1">
+      <div @click="authStore.logout()"
+        class="rounded-md w-full h-fit flex flex-row justify-between p-3 bg-black/30 hover:bg-white/30">
+        <p>Log out</p>  
+        <ArrowToTopRight />
+      </div>
+      <RouterLink to="/quotes" v-if="user?.role === 'admin'" class="rounded-md w-full h-fit flex flex-row justify-between p-3 bg-black/30 hover:bg-white/30"><p>Quotes</p>
+        <ArrowToTopRight />
+      </RouterLink>
     </div>
     <div class="flex flex-col space-y-1">
       <h4 class="text-lg font-medium">Timer Settings (in mins)</h4>
