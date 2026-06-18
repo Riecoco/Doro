@@ -44,7 +44,7 @@
       </p>
 
       <Table
-        v-else-if="!quotesStore.loading"
+        v-else
         :tableData="quotesStore.quotes ?? []"
       >
         <template #actions="{ row }">
@@ -150,6 +150,7 @@ async function handleAdd(quote) {
 
   // TODO: api call to add quote
   await quotesStore.createQuote(quoteObj.value)
+  await quotesStore.getAllQuotes(quotesStore.currentPage)
 
   // TODO: turn off loader
 

@@ -17,8 +17,8 @@ const emit = defineEmits(['submitQuote'])
 
 function submitQuote(){
   emit('submitQuote', {
-    text: text.value,
-    author: author.value
+    text: text.value.trim(),
+    author: author.value.trim()
   })
 }
 
