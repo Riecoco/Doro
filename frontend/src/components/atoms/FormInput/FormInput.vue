@@ -1,8 +1,10 @@
 <template>
   <div>
     <label class="block font-dm-sans text-md">{{ label }}</label>
+
     <input
       :type="type"
+      :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       :placeholder="placeholder"
       required
@@ -32,5 +34,5 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["update:modelValue"]);
+defineEmits(["update:modelValue"]);
 </script>
