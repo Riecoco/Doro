@@ -11,21 +11,14 @@ export const useQuotesStore = defineStore('quotes', () => {
     const error = ref(null);
 
     async function getQuoteById(id) {
-        if (!id) {
-            error.value = 'Quote ID is required';
-            return null;
-        }
 
         loading.value = true;
-        error.value = null;
-        currentQuote.value = null;
-
         try {
             const response = await axios.get(`/quotes/${id}`);
             currentQuote.value = response.data;
             return currentQuote.value;
         } catch (err) {
-            error.value = err.message || 'Failed to fetch quote';
+            error.value = err.data.message || 'Failed to fetch quote';
             return null;
         } finally {
             loading.value = false;
@@ -34,16 +27,13 @@ export const useQuotesStore = defineStore('quotes', () => {
 
     async function getRandomQuote() {
         loading.value = true;
-        error.value = null;
-        currentQuote.value = null;
-
         try {
             const response = await axios.get('/quotes/random');
             currentQuote.value = response.data;
             return currentQuote.value;
         }
         catch (err) {
-            error.value = err.message || 'Failed to fetch random quote';
+            error.value = err.data.message || 'Failed to fetch random quote';
             return null;
         }
         finally {
@@ -53,8 +43,6 @@ export const useQuotesStore = defineStore('quotes', () => {
 
     async function getAllQuotes(page = currentPage.value) {
         loading.value = true;
-        error.value = null;
-
         try {
             const response = await axios.get('/quotes', {
                 params: {
@@ -70,7 +58,7 @@ export const useQuotesStore = defineStore('quotes', () => {
 
             return quotes.value;
         } catch (err) {
-            error.value = err.message || 'Failed to fetch quotes';
+            error.value = err.data.message || 'Failed to fetch quotes';
             quotes.value = [];
             return [];
         } finally {
@@ -80,15 +68,13 @@ export const useQuotesStore = defineStore('quotes', () => {
 
     async function createQuote(quoteData) {
         loading.value = true;
-        error.value = null;
-
         try {
             const response = await axios.post('/quotes', quoteData);
             quotes.value.push(response.data);
             return response.data;
         }
         catch (err) {
-            error.value = err.message || 'Failed to create quote';
+            error.value = err.data.message || 'Failed to create quote';
             return null;
         }
         finally {
@@ -97,13 +83,7 @@ export const useQuotesStore = defineStore('quotes', () => {
     }
 
     async function updateQuote(id, quoteData) {
-        if (!id) {
-            error.value = 'Quote ID is required';
-            return null;
-        }
         loading.value = true;
-        error.value = null;
-
         try {
             const response = await axios.patch(`/quotes/${id}`, quoteData);
             const index = quotes.value.findIndex(q => q.id === id);
@@ -113,7 +93,7 @@ export const useQuotesStore = defineStore('quotes', () => {
             return response.data;
         }
         catch (err) {
-            error.value = err.message || 'Failed to update quote';
+            error.value = err.data.message || 'Failed to update quote';
             return null;
         }
         finally {
@@ -122,19 +102,14 @@ export const useQuotesStore = defineStore('quotes', () => {
     }
 
     async function deleteQuote(id) {
-        if (!id) {
-            error.value = 'Quote ID is required';
-            return false;
-        }
         loading.value = true;
-        error.value = null;
         try {
             await axios.delete(`/quotes/${id}`);
             quotes.value = quotes.value.filter(q => q.id !== id);
             return true;
         }
         catch (err) {
-            error.value = err.message || 'Failed to delete quote';
+            error.value = err.data.message || 'Failed to delete quote';
             return false;
         }
         finally {
