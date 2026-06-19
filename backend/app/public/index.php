@@ -54,7 +54,7 @@ $dispatcher = simpleDispatcher(
         $r->addRoute('POST', '/tasks', ['App\Controllers\TaskController', 'create']);
         $r->addRoute('GET', '/tasks', ['App\Controllers\TaskController', 'getAll']);
         $r->addRoute('GET', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'getById']);
-        $r->addRoute('PUT', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
+        $r->addRoute('PATCH', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
         $r->addRoute('DELETE', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'delete']);
 
     }

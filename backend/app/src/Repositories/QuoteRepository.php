@@ -69,13 +69,8 @@ class QuoteRepository extends Repository implements IQuoteRepository
         }
 
         $allowedFields = ['text', 'author'];
-        $fieldsToUpdate = array_filter(
-                            $allowedFields,
-                            fn($field) => $dto->hasField($field)
-                        );
-        $sql = "UPDATE Quotes SET " . implode(', ', 
-                                            array_map(fn($field) => "$field = :$field", 
-                                            $fieldsToUpdate))
+        $fieldsToUpdate = array_filter($allowedFields, fn($field) => $dto->hasField($field));
+        $sql = "UPDATE Quotes SET " . implode(', ', array_map(fn($field) => "$field = :$field", $fieldsToUpdate))
                                  . " WHERE id = :id";
         $values = [];
         foreach ($fieldsToUpdate as $field) {

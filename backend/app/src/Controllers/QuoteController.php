@@ -49,7 +49,7 @@ class QuoteController extends BaseController
 
     public function getRandom()
     {
-        $this->authenticateAdmin();
+        $this->authenticateUser();
         try {
             $quote = $this->quoteService->getRandom();
             if ($quote) {
@@ -84,10 +84,9 @@ class QuoteController extends BaseController
             if ($updatedQuote) {
                 return $this->sendSuccessResponse($updatedQuote);
             } else {
-                return $this->sendErrorResponse('Update failed', 500);
+                return $this->sendErrorResponse('Quote not found', 404);
             }
         } catch (\Exception $e) {
-            error_log($e->getMessage());
             return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
     }

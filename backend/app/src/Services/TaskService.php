@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Task;
+use App\Models\UpdateTaskDTO;
 use App\Repositories\Interfaces\ITaskRepository;
 use App\Repositories\TaskRepository;
 use App\Services\Interfaces\ITaskService;
@@ -20,9 +21,9 @@ class TaskService implements ITaskService
         return $this->repository->create($task);
     }
 
-    public function getAll(int $userID): array
+    public function getAllByStatusForUser(int $userID, bool $isCompleted): array
     {
-        return $this->repository->getAll($userID);
+        return $this->repository->getAllByStatusForUser($userID, $isCompleted);
     }
 
     public function getById(int $taskID): ?Task
@@ -30,7 +31,7 @@ class TaskService implements ITaskService
         return $this->repository->getById($taskID);
     }
 
-    public function update(Task $task): bool
+    public function update(UpdateTaskDTO $task): ?Task
     {
         return $this->repository->update($task);
     }

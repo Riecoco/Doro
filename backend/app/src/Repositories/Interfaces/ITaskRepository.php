@@ -3,12 +3,13 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Task;
+use App\Models\UpdateTaskDTO;
 
 interface ITaskRepository
 {
-    public function getAll(int $userID): array;
+    public function getAllByStatusForUser(int $userID, bool $isCompleted): array;
     public function getById(int $taskID): ?Task;
     public function create(Task $task): Task;
-    public function update(Task $task): bool;
+    public function update(UpdateTaskDTO $dto): ?Task;
     public function delete(int $taskID): bool;
 }

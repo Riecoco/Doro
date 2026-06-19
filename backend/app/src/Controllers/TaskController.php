@@ -4,11 +4,10 @@ namespace App\Controllers;
 
 use Exception;
 use App\Models\Task;
-use App\Models\Subtask;
+use App\Models\UpdateTaskDTO;
 use App\Controllers\BaseController;
 use App\Services\TaskService;
 use App\Services\Interfaces\ITaskService;
-use App\Services\SubtaskService;
 
 class TaskController extends BaseController
 {
@@ -25,12 +24,12 @@ class TaskController extends BaseController
         $currentUser = $this->authenticateUser();
         try {
             $task = $this->mapPostDataToClass(Task::class);
-            $task->userID = $currentUser->id; // Ensure the task is linked to the current user
-            // 1. FIRST create the main task to get a taskID for the subtasks
+            $task->userId = $currentUser->id;
             $createdTask = $this->taskService->create($task);
 
             return $this->sendSuccessResponse($createdTask, 201);
         } catch (Exception $e) {
+            error_log($e->getMessage());
             return $this->sendErrorResponse("Oops, something went wrong!", 500);
         }
     }
@@ -39,7 +38,8 @@ class TaskController extends BaseController
     {
         $currentUser = $this->authenticateUser();
         try {
-            $tasks = $this->taskService->getAll($currentUser->id);
+            $isCompleted = isset($_GET['isCompleted']) ? filter_var($_GET['isCompleted'], FILTER_VALIDATE_BOOLEAN) : false;
+            $tasks = $this->taskService->getAllByStatusForUser($currentUser->id, $isCompleted);
             return $this->sendSuccessResponse($tasks);
         } catch (Exception $e) {
             return $this->sendErrorResponse("Oops, something went wrong!", 500);
@@ -60,19 +60,19 @@ class TaskController extends BaseController
         }
     }
 
+    //this is a patch not put
     public function update($vars = [])
     {
         $currentUser = $this->authenticateUser();
         try {
-            $task = $this->mapPostDataToClass(Task::class);
-            if (empty($task->title) || empty($task->description)) {
-                return $this->sendErrorResponse('Title and description are required', 400);
+            $dto = $this->mapPostDataToClass(UpdateTaskDTO::class);
+            $dto->id = $vars['id'];
+            $updatedTask = $this->taskService->update($dto);
+            if ($updatedTask) {
+                return $this->sendSuccessResponse($updatedTask);
+            } else {
+                return $this->sendErrorResponse('Task not found', 404);
             }
-            $updatedTask = $this->taskService->update($task);
-            if (!$updatedTask) {
-                return $this->create();
-            }
-            return $this->sendSuccessResponse($updatedTask);
         } catch (Exception $e) {
             return $this->sendErrorResponse("Oops, something went wrong!", 500);
         }
@@ -82,10 +82,10 @@ class TaskController extends BaseController
     {
         $currentUser = $this->authenticateUser();
         try {
-            $deleted = $this->taskService->delete($vars['id']);
-            if (!$deleted) {
-                return $this->sendErrorResponse('Task not found', 404);
+            if (!isset($vars['id']) || $this->taskService->getById($vars['id']) === null) {
+                return $this->sendErrorResponse('Task not found', 400);
             }
+            $this->taskService->delete($vars['id']);
             return $this->sendSuccessResponse(['message' => 'Task deleted']);
         } catch (Exception $e) {
             return $this->sendErrorResponse("Oops, something went wrong!", 500);

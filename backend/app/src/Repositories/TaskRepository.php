@@ -4,23 +4,28 @@ namespace App\Repositories;
 
 use App\Framework\Repository;
 use App\Models\Task;
-use App\Models\Session;
-use App\Models\Subtask;
+use App\Models\UpdateTaskDTO;
 use App\Repositories\Interfaces\ITaskRepository;
 
 class TaskRepository extends Repository implements ITaskRepository
 {
     /**
      * @return Task[]
+     * @param int $userID
+     * @param bool $isCompleted
+     * returns an array of Task objects for a specific user and completion status
      */
-    public function getAll(int $userID): array
+    public function getAllByStatusForUser(int $userID, bool $isCompleted): array
     {
         $sql = "
-            SELECT T.taskID, T.userID, T.title, T.description, T.isCompleted
+            SELECT T.id, T.userId, T.title, T.isCompleted, T.createdAt
             FROM Tasks as T
-            WHERE T.userID = :userID AND T.isCompleted = 0";
+            WHERE T.userId = :userId AND T.isCompleted = :isCompleted ORDER BY T.createdAt DESC";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute(['userID' => $userID]);
+        $stmt->execute([
+            'userId' => $userID,
+            'isCompleted' => (int)$isCompleted
+        ]);
         $tasks = [];
         $results = $stmt->fetchAll();
         foreach ($results as $result) {
@@ -33,9 +38,9 @@ class TaskRepository extends Repository implements ITaskRepository
     {
         $sql = "
             SELECT * FROM Tasks 
-            WHERE taskID = :taskID";
+            WHERE id = :id";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute(['taskID' => $taskID]);
+        $stmt->execute(['id' => $taskID]);
         $data = $stmt->fetch();
         return $data ? new Task($data) : null;
     }
@@ -43,37 +48,44 @@ class TaskRepository extends Repository implements ITaskRepository
     public function create(Task $task): Task
     {
         $sql = "
-            INSERT INTO Tasks (userID, title, description, isCompleted, estimatedCycles) 
-            VALUES (:userID, :title, :description, :isCompleted, :estimatedCycles)";
+            INSERT INTO Tasks (userId, title, isCompleted, createdAt) 
+            VALUES (:userId, :title, :isCompleted, :createdAt)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute([
-            'userID' => $task->user?->userID,
+            'userId' => $task->userId,
             'title' => $task->title,
-            'description' => $task->description,
-            'isCompleted' => (int)$task->isCompleted
+            'isCompleted' => (int)$task->isCompleted,
+            'createdAt' => $task->createdAt->format('Y-m-d H:i:s')
         ]);
         $taskID = (int)$this->getConnection()->lastInsertId();
         return $this->getById($taskID);
     }
 
-    public function update(Task $task): bool
+    public function update(UpdateTaskDTO $dto): ?Task
     {
-        $sql = "UPDATE Tasks 
-                SET title = :title, description = :description, isCompleted = :isCompleted, estimatedCycles = :estimatedCycles
-                WHERE taskID = :taskID";
+        if (!$dto->id) {
+            return null;
+        }
+
+        $allowedFields = ['title', 'isCompleted'];
+        $fieldsToUpdate = array_filter($allowedFields, fn($field) => $dto->hasField($field));
+        $sql = "UPDATE Tasks SET " . implode(', ', array_map(fn($field) => "$field = :$field", $fieldsToUpdate))
+                                 . " WHERE id = :id";
+        $values = [];
+        foreach ($fieldsToUpdate as $field) {
+            $values[$field] = $dto->$field;
+        }
+        $values['id'] = $dto->id;
+
         $stmt = $this->getConnection()->prepare($sql);
-        return $stmt->execute([
-            'taskID' => $task->taskID,
-            'title' => $task->title,
-            'description' => $task->description,
-            'isCompleted' => (int)$task->isCompleted
-        ]);
+        $stmt->execute($values);
+        return $this->getById($dto->id);
     }
 
-    public function delete(int $taskID): bool
+    public function delete(int $id): bool
     {
-        $sql = "DELETE FROM Tasks WHERE taskID = :taskID";
+        $sql = "DELETE FROM Tasks WHERE id = :id";
         $stmt = $this->getConnection()->prepare($sql);
-        return $stmt->execute(['taskID' => $taskID]);
+        return $stmt->execute(['id' => $id]);
     }
 }
