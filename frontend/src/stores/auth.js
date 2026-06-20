@@ -48,9 +48,10 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     async function fetchUser() {
-        loading.value = true;
         if (!getAuthToken()) return;
         if (user.value) return;
+
+        loading.value = true;
 
         try {
             const response = await axios.get("/auth/me");
@@ -72,6 +73,7 @@ export const useAuthStore = defineStore("auth", () => {
   return {
     user,
     token,
+    loading,
     error,
     login,
     logout,
