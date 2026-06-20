@@ -1,8 +1,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
-import TaskFilter from './molecules/TaskFilter/TaskFilter.vue';
-import TaskForm from './molecules/TaskInput/TaskInput.vue';
-import TaskItem from './molecules/TaskItem/TaskItem.vue';
+import TaskFilter from './atoms/TaskFilter/TaskFilter.vue';
+import TaskForm from './atoms/TaskInput/TaskInput.vue';
+import TaskItem from './atoms/TaskItem/TaskItem.vue';
 import { useTasksStore } from '../stores/tasks';
 
 const tasksStore = useTasksStore();

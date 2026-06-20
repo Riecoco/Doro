@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const token = ref(getAuthToken());
   const error = ref(null);
+  const success = ref(null);
 
     async function login(email, password) {
         loading.value = true;
@@ -42,7 +43,8 @@ export const useAuthStore = defineStore("auth", () => {
         setAuthToken(null);
         token.value = null;
         user.value = null;
-        router.push("/login");
+        success.value = "You've been logged out successfully.";
+        router.push("/");
     }
 
     async function fetchUser() {

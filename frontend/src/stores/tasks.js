@@ -15,7 +15,7 @@ export const useTasksStore = defineStore('tasks', () => {
             currentTask.value = response.data;
             return currentTask.value;
         } catch (err) {
-            error.value = err.data.message || 'Failed to fetch task';
+            error.value = err.response?.data?.message || err.message || 'Failed to fetch task';
             return null;
         } finally {
             loading.value = false;
@@ -33,7 +33,7 @@ export const useTasksStore = defineStore('tasks', () => {
             tasks.value = response.data;
             return tasks.value;
         } catch (err) {
-            error.value = err.data.message || 'Failed to fetch tasks';
+            error.value = err.response?.data?.message || err.message || 'Failed to fetch tasks';
             tasks.value = [];
             return [];
         } finally {
@@ -47,7 +47,7 @@ export const useTasksStore = defineStore('tasks', () => {
             const response = await axios.post('/tasks', taskData);
             return response.data;
         } catch (err) {
-            error.value = err.data.message || 'Failed to create task';
+            error.value = err.response?.data?.message || err.message || 'Failed to create task';
             return null;
         } finally {
             loading.value = false;
@@ -60,7 +60,7 @@ export const useTasksStore = defineStore('tasks', () => {
             const response = await axios.patch(`/tasks/${id}`, taskData);
             return response.data;
         } catch (err) {
-            error.value = err.data.message || 'Failed to update task';
+            error.value = err.response?.data?.message || err.message || 'Failed to update task';
             return null;
         } finally {
             loading.value = false;
@@ -73,7 +73,7 @@ export const useTasksStore = defineStore('tasks', () => {
             await axios.delete(`/tasks/${id}`);
             return true;
         } catch (err) {
-            error.value = err.data.message || 'Failed to delete task';
+            error.value = err.response?.data?.message || err.message || 'Failed to delete task';
             return false;
         }
         finally {

@@ -1,8 +1,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
-import TaskFilter from '../../molecules/TaskFilter/TaskFilter.vue';
-import TaskForm from '../../molecules/TaskInput/TaskInput.vue';
-import TaskItem from '../../molecules/TaskItem/TaskItem.vue';
+import TaskFilter from '../../atoms/TaskFilter/TaskFilter.vue';
+import TaskForm from '../../atoms/TaskInput/TaskInput.vue';
+import TaskItem from '../../atoms/TaskItem/TaskItem.vue';
 import { useTasksStore } from '../../../stores/tasks';
 
 const tasksStore = useTasksStore();
@@ -48,6 +48,6 @@ async function toggleComplete(task) {
         </div>
         <TaskForm v-if="filterStatus === false" @add="addTask"/>
         <TaskItem v-if="tasks.length > 0" v-for="task in tasks" :key="task.id" :task="task" @delete="deleteTask" @update="updateTask" @toggle-complete="toggleComplete"/>
-        <div v-else class="text-gray-500 text-center mt-4">No tasks available.</div>
+        <div v-else class="text-gray-300 text-center mt-4">No tasks available.</div>
     </div>
 </template>

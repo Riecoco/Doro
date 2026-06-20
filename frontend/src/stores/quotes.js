@@ -10,6 +10,15 @@ export const useQuotesStore = defineStore('quotes', () => {
     const loading = ref(false);
     const error = ref(null);
 
+    const showQuotes = ref(
+        JSON.parse(localStorage.getItem("show_quotes") ?? "true")
+    );
+
+    function setShowQuotes(value) {
+        showQuotes.value = value;
+        localStorage.setItem("show_quotes", JSON.stringify(value));
+    }
+
     async function getQuoteById(id) {
 
         loading.value = true;
@@ -130,6 +139,8 @@ export const useQuotesStore = defineStore('quotes', () => {
         getAllQuotes,
         createQuote,
         updateQuote,
-        deleteQuote
+        deleteQuote,
+        showQuotes,
+        setShowQuotes,
     }
 })

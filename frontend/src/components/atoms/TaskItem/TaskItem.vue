@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import Trash from '../../atoms/Trash/Trash.vue';
+import Trash from '../Icons/Trash.vue';
 import { onClickOutside } from '@vueuse/core';
 import { useTemplateRef } from 'vue';
 

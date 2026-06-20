@@ -21,12 +21,12 @@ const handleAddTask = () => {
             v-model="task"
             type="text"
             placeholder="+ Add a new task..."
-            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#7a560070]"
+            class="w-full px-4 py-2 text-sm md:text-md lg:text-md border rounded-md focus:outline-none focus:ring-2 focus:ring-[#7a560070]"
         />
             </div>
         <button
             @click="handleAddTask"
-            class="flex-1 px-4 py-2 bg-[#7a560070] text-white rounded-md hover:bg-[#7a560090] font-bold outline-white/30 outline-1 outline focus:outline-none focus:ring-2 focus:ring-[#7a560070]"
+            class="flex-1 px-4 py-2 text-sm md:text-md lg:text-md bg-[#7a560070] text-white rounded-md hover:bg-[#7a560090] font-bold outline-white/30 outline-1 outline focus:outline-none focus:ring-2 focus:ring-[#7a560070]"
         >
             Add
         </button>
