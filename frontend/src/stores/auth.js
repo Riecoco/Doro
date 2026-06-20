@@ -44,7 +44,7 @@ export const useAuthStore = defineStore("auth", () => {
         token.value = null;
         user.value = null;
         success.value = "You've been logged out successfully.";
-        router.push("/");
+        await router.replace("/");
     }
 
     async function fetchUser() {

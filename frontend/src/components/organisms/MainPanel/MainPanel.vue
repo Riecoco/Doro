@@ -25,7 +25,7 @@ onMounted(async () => {
     class="flex flex-col items-center bg-black/10 backdrop-blur-md text-white border border-white/20 rounded-lg px-20 py-10 w-fit h-fit"
   >
     <div class="min-h-6 italic text-center text-white/80 text-sm md:text-md">
-      <p v-if="quotesStore.showQuotes && quotesStore.currentQuote">
+      <p v-if="authStore.user && quotesStore.showQuotes && quotesStore.currentQuote">
         “{{ quotesStore.currentQuote.text }}” — {{ quotesStore.currentQuote.author }}
       </p>
       <p v-else>
