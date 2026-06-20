@@ -24,7 +24,12 @@ const routes = [
     path: '/quotes',
     name: 'QuotesDashboard',
     component: QuotesDashboard,
-  }
+  },
+    {
+    path: '/test',
+    name: 'Test',
+    component: () => import('../components/TestComponent.vue'),
+  },
 ];
 
 const router = createRouter({

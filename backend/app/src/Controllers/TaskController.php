@@ -74,6 +74,7 @@ class TaskController extends BaseController
                 return $this->sendErrorResponse('Task not found', 404);
             }
         } catch (Exception $e) {
+            error_log($e->getMessage());
             return $this->sendErrorResponse("Oops, something went wrong!", 500);
         }
     }

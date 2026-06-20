@@ -90,33 +90,9 @@
             <Transition name="menu">
               <section
                 v-if="activeMenuIndex === 0"
-                class="w-64 sm:w-80 md:w-100 lg:w-150 p-3 mb-7 bg-black/10 backdrop-blur-md text-white border border-white/20 rounded-lg menu"
+                class="w-64 sm:w-80 md:w-100 lg:w-150 p-1 mb-7 bg-black/10 backdrop-blur-md text-white border border-white/20 rounded-lg menu"
               >
-                <form
-                  v-if="tasks != null && tasks.length > 0"
-                  v-for="task in tasks"
-                  :key="task.id"
-                  class="flex items-center space-x-2"
-                >
-                  <div>
-                    <SixDots />
-                  </div>
-                  <input
-                    type="checkbox"
-                    :id="task.id"
-                    v-model="task.completed"
-                  />
-                  <label :for="task.id">{{ task.name }}</label>
-                </form>
-                <div v-else class="text-white/60 text-center">
-                  <p>You've got no tasks yet, want to get started?</p>
-                  <button
-                    @click="addTask()"
-                    class="mt-4 border border-white/20 text-white py-2 px-4 rounded-md hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-                  >
-                    Add Task
-                  </button>
-                </div>
+                <TaskPanel />
               </section>
             </Transition>
             <MenuButton
@@ -186,6 +162,7 @@ import CycleIcon from "../../atoms/Icons/CycleIcon.vue";
 import Play from "../../atoms/Icons/Play.vue";
 import Pause from "../../atoms/Icons/Pause.vue";
 import Settings from "../../organisms/Settings/Settings.vue";
+import TaskPanel from "../../organisms/TaskPanel/TaskPanel.vue";
 
 // use timer config values later to set the initial duration of the timer.
 // db will automatically store time in seconds, so we won't need convert when fetching,
@@ -273,18 +250,6 @@ onMounted(async () => {
   await authStore.fetchUser();
   user.value = authStore.user;
 });
-
-// const getTasks = async () => {
-//   if (!authStore.token) return;
-//   try {
-//     const response = await axios.get("/tasks");
-//     if (response.data) {
-//       tasks.value = response.data;
-//     }
-//   } catch (err) {
-//     console.error("Error fetching tasks:", err);
-//   }
-// };
 
 </script>
 

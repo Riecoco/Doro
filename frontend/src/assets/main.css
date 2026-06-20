@@ -52,3 +52,25 @@
     font-size: 2.25rem;
     /* 36px */
 }
+
+.scroll {
+    scrollbar-color: rgb(255 255 255 / 40%) transparent;
+    scrollbar-width: thin;
+}
+
+.scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 40%);
+    border-radius: 999px;
+}
+
+.scroll::-webkit-scrollbar-button {
+    display: none;
+}

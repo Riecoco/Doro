@@ -74,10 +74,15 @@ class TaskRepository extends Repository implements ITaskRepository
         $values = [];
         foreach ($fieldsToUpdate as $field) {
             $values[$field] = $dto->$field;
+            if ($field === 'isCompleted') {
+                $values[$field] = (int) $values[$field];
+            }
         }
         $values['id'] = $dto->id;
 
         $stmt = $this->getConnection()->prepare($sql);
+        error_log($sql);
+        error_log(print_r($values, true));
         $stmt->execute($values);
         return $this->getById($dto->id);
     }

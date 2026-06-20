@@ -1,6 +1,6 @@
 <template>
   <div
-    class="font-dm-sans h-80 overflow-y-auto touch-pan-y flex flex-col w-full space-y-10 p-3"
+    class="scroll font-dm-sans h-60 overflow-y-auto touch-pan-y flex flex-col w-full space-y-10 p-1"
   >
     <h2 class="text-2xl font-bold mb-5 text-white">Settings</h2>
     <div v-if="!user" class="flex-col space-y-1">

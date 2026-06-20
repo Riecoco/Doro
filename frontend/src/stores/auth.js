@@ -5,11 +5,13 @@ import { setAuthToken, getAuthToken } from '../utils/axios.js'
 import router from '../router'
 
 export const useAuthStore = defineStore("auth", () => {
+  const loading = ref(false);
   const user = ref(null);
   const token = ref(getAuthToken());
   const error = ref(null);
 
     async function login(email, password) {
+        loading.value = true;
         error.value = null;
         try {
             const response = await axios.post("/auth/login", { email, password });
@@ -29,7 +31,9 @@ export const useAuthStore = defineStore("auth", () => {
                     err.response?.data?.error || "An error occurred during login.";
                 }
                 router.push("/login");
-            }
+            } finally {
+                loading.value = false;
+        }
     
     }
 
@@ -42,6 +46,7 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     async function fetchUser() {
+        loading.value = true;
         if (!getAuthToken()) return;
         if (user.value) return;
 
@@ -56,10 +61,9 @@ export const useAuthStore = defineStore("auth", () => {
                 router.push("/");
             }
         } catch (err) {
-            if (err.response && err.response.status === 401) {
-            router.push("/login");
-            }
             console.error("Error fetching user data:", err);
+        } finally {
+            loading.value = false;
         }
     }
 

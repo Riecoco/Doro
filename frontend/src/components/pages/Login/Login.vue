@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" class="min-h-screen flex items-center justify-center">
+  <div v-if="authStore.loading" class="min-h-screen flex items-center justify-center">
     <div class="text-center">
       <Loader />
       <p class="mt-4 text-gray-500">Loading...</p>
@@ -32,9 +32,9 @@
       <RouterLink to="/signup" class="text-indigo-500">Click here</RouterLink>
     </p>
 
-    <ErrorMessage v-if="error" :message="error" @close="error = ''" />
+    <ErrorMessage v-if="authStore.error" :message="authStore.error" @close="authStore.error = ''" />
 
-    <SignInButton>Log in</SignInButton>
+    <SignInButton @click="handleLogin">Log in</SignInButton>
   </form>
 </template>
 
@@ -48,34 +48,16 @@ import router from "../../../router/index.js";
 import Loader from "../../atoms/Loader/Loader.vue";
 import ErrorMessage from "../../molecules/Message/ErrorMessage.vue";
 
-const loading = ref(true);
 const authStore = useAuthStore();
 const user = ref(null);
-const error = ref("");
 const email = ref("");
 const password = ref("");
 
 onMounted(async () => {
-  try {
-    loading.value = true;
     await authStore.fetchUser();
-    user.value = authStore.user;
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
 });
 
 const handleLogin = async () => {
-  try {
-    loading.value = true;
     await authStore.login(email.value, password.value);
-  } catch (err) {
-    console.error("Login error:", err);
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
 };
 </script>
