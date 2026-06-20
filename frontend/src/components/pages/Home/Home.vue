@@ -4,12 +4,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Doro Home</title>
   </head>
-  <body
-    class="bg-[url(/src/assets/img/default-bg.jpg)] bg-cover bg-center bg-fixed"
-  >
-    <section
-      class="h-dvh place-items-center flex flex-col justify-center space-y-15 relative"
-    >
+  <body class="bg-[url(/src/assets/img/default-bg.jpg)] bg-cover bg-center bg-fixed">
+    <section class="h-dvh place-items-center flex flex-col justify-center space-y-15 relative">
       <MainPanel />
       <BottomPanel />
     </section>
