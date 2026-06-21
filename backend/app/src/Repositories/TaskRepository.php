@@ -81,8 +81,6 @@ class TaskRepository extends Repository implements ITaskRepository
         $values['id'] = $dto->id;
 
         $stmt = $this->getConnection()->prepare($sql);
-        error_log($sql);
-        error_log(print_r($values, true));
         $stmt->execute($values);
         return $this->getById($dto->id);
     }

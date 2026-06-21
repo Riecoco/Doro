@@ -30,7 +30,6 @@ class AuthService implements IAuthService
             return null;
         }
 
-        // Verify password against hash
         if (!password_verify($password, $user->password)) {
             return null;
         }
@@ -64,19 +63,17 @@ class AuthService implements IAuthService
         try {
             $decoded = JWT::decode($token, new Key(Config::$secretKey, self::JWT_ALGORITHM));
 
-            // Validate required claims
             if (!isset($decoded->iss) || !isset($decoded->aud) || !isset($decoded->exp)) {
                 return false;
             }
 
-            // Validate issuer and audience match domain
             if ($decoded->iss !== Config::$domain || $decoded->aud !== Config::$domain) {
                 return false;
             }
 
             return true;
         } catch (\Exception $e) {
-            return false; // Invalid token
+            return false;
         }
     }
 
@@ -85,10 +82,9 @@ class AuthService implements IAuthService
         try {
             $decoded = JWT::decode($token, new Key(Config::$secretKey, self::JWT_ALGORITHM));
         } catch (\Exception $e) {
-            return null; // Invalid token
+            return null; 
         }
 
-        // Get user by ID from the decoded token
         if (isset($decoded->data->id)) {
             return $this->userRepository->getById($decoded->data->id);
         }
@@ -98,15 +94,12 @@ class AuthService implements IAuthService
 
     public function register(User $user): User
     {
-        // Hash password before storing
         $user->password = password_hash($user->password, PASSWORD_DEFAULT);
-
-        // Check if user already exists
         $existingUser = $this->userRepository->getByEmail($user->email);
         if ($existingUser) {
-            throw new UserAlreadyExistsException(); // custom exception
+            throw new UserAlreadyExistsException();
         }
 
-        return $this->userRepository->create($user); // create user
+        return $this->userRepository->create($user);
     }
 }

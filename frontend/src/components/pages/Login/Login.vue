@@ -26,15 +26,16 @@
       label="Password"
       placeholder="••••••••"
     />
-
+    <Message
+      v-if="authStore.error"
+      :message="authStore.error"
+      @close="authStore.error = ''"
+    />
+    <SignInButton @click="handleLogin">Log in</SignInButton>
     <p class="mt-4">
       Create an account?
       <RouterLink to="/signup" class="text-indigo-500">Click here</RouterLink>
     </p>
-
-    <ErrorMessage v-if="authStore.error" :message="authStore.error" @close="authStore.error = ''" />
-
-    <SignInButton @click="handleLogin">Log in</SignInButton>
   </form>
 </template>
 
@@ -46,7 +47,7 @@ import axios from "../../../utils/axios.js";
 import useAuthStore from "../../../stores/auth.js";
 import router from "../../../router/index.js";
 import Loader from "../../atoms/Loader/Loader.vue";
-import ErrorMessage from "../../molecules/Message/ErrorMessage.vue";
+import Message from "../../molecules/Message/Message.vue";
 
 const authStore = useAuthStore();
 const user = ref(null);

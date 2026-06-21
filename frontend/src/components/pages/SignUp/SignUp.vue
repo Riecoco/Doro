@@ -1,5 +1,12 @@
 <template>
+  <div v-if="authStore.loading" class="min-h-screen flex items-center justify-center">
+    <div class="text-center">
+      <Loader />
+      <p class="mt-4 text-gray-500">Loading...</p>
+    </div>
+  </div>
   <form
+    v-else
     @submit.prevent="handleSignin"
     class="flex flex-col space-y-4 bg-white text-gray-500 max-w-85 m-auto mt-12 w-full md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10"
   >
@@ -31,9 +38,12 @@
         placeholder="••••••••"
       />
     </div>
-    <ErrorMessage v-if="error" :message="error" @close="error = ''" />
-
-    <SignInButton>Sign Up</SignInButton>
+    <Message
+      v-if="authStore.error"
+      :message="authStore.error"
+      @close="authStore.error = ''"
+    />
+    <SignInButton @click="handleSignin()">Sign Up</SignInButton>
     <p class="text-center mt-4">
       Already have an account?
       <RouterLink to="/login" class="text-blue-500 underline"
@@ -44,60 +54,34 @@
 </template>
 
 <script setup>
-import ErrorMessage from "@/components/molecules/Message/ErrorMessage.vue";
-import FormInput from "@/components/atoms/FormInput/FormInput.vue";
-import SignInButton from "@/components/atoms/Button/SignInButton.vue";
-import axios, { getAuthToken, setAuthToken } from "@/utils/axios.js";
+import FormInput from "../../atoms/FormInput/FormInput.vue";
+import SignInButton from "../../atoms/Button/SignInButton.vue";
 import { RouterLink } from "vue-router";
 import { onMounted, ref } from "vue";
-import router from "@/router";
+import router from "../../../router/index.js";
+import { useAuthStore } from "../../../stores/auth.js";
+import Loader from "../../atoms/Loader/Loader.vue";
+import Message from "../../molecules/Message/Message.vue";
 
-const loading = ref(false);
-const error = ref("");
 const username = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPasswordValue = ref("");
 
+const authStore = useAuthStore();
+
 onMounted(() => {
-  if (getAuthToken()) {
-    router.push("/"); // if already logged in, redirect to home page
+  if (authStore.user) {
+    router.push("/");
   }
 });
 
 async function handleSignin() {
-  error.value = ""; // Clear any previous errors
-  loading.value = true;
-
   if (password.value !== confirmPasswordValue.value) {
-    error.value = "Passwords do not match.";
-    loading.value = false;
+    authStore.error = "Passwords do not match.";
     return;
   }
 
-  try {
-    const response = await axios.post("/auth/register", {
-      username: username.value,
-      email: email.value,
-      password: password.value,
-    });
-    if (response.status === 201) {
-      //automatic login after successful registration
-      const loginResponse = await axios.post("/auth/login", {
-        email: email.value,
-        password: password.value,
-      });
-      setAuthToken(loginResponse.data.token);
-      setTimeout(() => {}, 1000);
-      router.push("/");
-    }
-  } catch (err) {
-    console.log(err.response?.data);
-    error.value =
-      err.response?.data.error ||
-      "An error occurred during sign up. Please try again.";
-  } finally {
-    loading.value = false;
-  }
+  await authStore.register(username.value, email.value, password.value);
 }
 </script>

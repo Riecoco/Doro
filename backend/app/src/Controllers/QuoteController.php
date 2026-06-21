@@ -68,7 +68,10 @@ class QuoteController extends BaseController
         try {
             $quote = $this->mapPostDataToClass(Quote::class);
             $createdQuote = $this->quoteService->create($quote);
-            return $this->sendSuccessResponse($createdQuote, 201);
+            return $this->sendSuccessResponse([
+                'quote' => $createdQuote,
+                'message' => 'Quote created successfully'
+            ], 201);
         } catch (\Exception $e) {
             return $this->sendErrorResponse('Oops, something went wrong!', 500);
         }
@@ -82,7 +85,10 @@ class QuoteController extends BaseController
             $updateDto->quoteID = $vars['id'];
             $updatedQuote = $this->quoteService->update($updateDto);
             if ($updatedQuote) {
-                return $this->sendSuccessResponse($updatedQuote);
+                return $this->sendSuccessResponse([
+                    'quote' => $updatedQuote,
+                    'message' => 'Quote updated successfully'
+                ]);
             } else {
                 return $this->sendErrorResponse('Quote not found', 404);
             }
@@ -97,7 +103,9 @@ class QuoteController extends BaseController
         try {
             $result = $this->quoteService->delete($vars['id']);
             if ($result) {
-                return $this->sendSuccessResponse(['message' => 'Quote deleted successfully']);
+                return $this->sendSuccessResponse([
+                    'message' => 'Quote deleted successfully'
+                ]);
             } else {
                 return $this->sendErrorResponse('Quote not found', 404);
             }

@@ -11,26 +11,51 @@ export const useAuthStore = defineStore("auth", () => {
   const error = ref(null);
   const success = ref(null);
 
+    async function register(username, email, password) {
+        loading.value = true;
+        error.value = null;
+        success.value = null;
+        try {
+            const response = await axios.post("/auth/register", { username, email, password });
+            if (response.status === 201) {
+            const loginResponse = await axios.post("/auth/login", {
+                email,
+                password,
+            });
+            setAuthToken(loginResponse.data.token);
+            token.value = loginResponse.data.token;
+            user.value = loginResponse.data.user;
+            success.value = response.data.message || "Registration successful! Redirecting to home page...";
+            router.push("/");
+            }
+        } catch (err) {
+            error.value =
+                err.response?.data?.error || "An error occurred during signup.";
+            router.push("/signup");
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function login(email, password) {
         loading.value = true;
         error.value = null;
+        success.value = null;
         try {
             const response = await axios.post("/auth/login", { email, password });
             setAuthToken(response.data.token);
             token.value = response.data.token;
             user.value = response.data.user;
             if (user.value?.role === "admin") {
+                success.value = response.data.message || "Login successful! Redirecting to quotes page...";
                 router.push("/quotes");
-                } else {
+            } else {
+                success.value = response.data.message || "Login successful! Redirecting to home page...";
                 router.push("/");
-                }
+            }
             } catch (err) {
-                if (err.response?.status === 401) {
-                error.value = "Invalid email or password. Please try again.";
-                } else {
                 error.value =
                     err.response?.data?.error || "An error occurred during login.";
-                }
                 router.push("/login");
             } finally {
                 loading.value = false;
@@ -59,12 +84,14 @@ export const useAuthStore = defineStore("auth", () => {
             user.value = response.data;
             }
             if (user.value?.role === "admin") {
+                success.value = response.data.message || "Welcome back, admin! Redirecting to quotes page...";
                 router.push("/quotes");
             } else {
+                success.value = response.data.message || "Welcome back! Redirecting to home page...";
                 router.push("/");
             }
         } catch (err) {
-            console.error("Error fetching user data:", err);
+            error.value = err.response?.data?.error || "Failed to fetch user data.";
         } finally {
             loading.value = false;
         }
@@ -77,7 +104,9 @@ export const useAuthStore = defineStore("auth", () => {
     error,
     login,
     logout,
+    register,
     fetchUser,
+    success
   };
 })
 

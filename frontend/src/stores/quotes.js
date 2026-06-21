@@ -9,6 +9,7 @@ export const useQuotesStore = defineStore('quotes', () => {
     const totalPages = ref(1);
     const loading = ref(false);
     const error = ref(null);
+    const success = ref(null);
 
     const showQuotes = ref(
         JSON.parse(localStorage.getItem("show_quotes") ?? "true")
@@ -20,14 +21,13 @@ export const useQuotesStore = defineStore('quotes', () => {
     }
 
     async function getQuoteById(id) {
-
         loading.value = true;
         try {
             const response = await axios.get(`/quotes/${id}`);
             currentQuote.value = response.data;
             return currentQuote.value;
         } catch (err) {
-            error.value = err.data.message || 'Failed to fetch quote';
+            error.value = err.response?.data?.error || 'Failed to fetch quote';
             return null;
         } finally {
             loading.value = false;
@@ -42,7 +42,7 @@ export const useQuotesStore = defineStore('quotes', () => {
             return currentQuote.value;
         }
         catch (err) {
-            error.value = err.data.message || 'Failed to fetch random quote';
+            error.value = err.response?.data?.error || 'Failed to fetch random quote';
             return null;
         }
         finally {
@@ -58,16 +58,13 @@ export const useQuotesStore = defineStore('quotes', () => {
                     page: page
                 }
             });
-
-            console.log(response);
-
             quotes.value = response.data.quotes ?? [];
             totalPages.value = response.data.totalPages ?? 1;
             currentPage.value = page;
 
             return quotes.value;
         } catch (err) {
-            error.value = err.data.message || 'Failed to fetch quotes';
+            error.value = err.response?.data?.error || 'Failed to fetch quotes';
             quotes.value = [];
             return [];
         } finally {
@@ -80,10 +77,11 @@ export const useQuotesStore = defineStore('quotes', () => {
         try {
             const response = await axios.post('/quotes', quoteData);
             quotes.value.push(response.data);
-            return response.data;
+            success.value = response.data.message || "Quote created successfully!";
+            return response.data.quote || response.data;
         }
         catch (err) {
-            error.value = err.data.message || 'Failed to create quote';
+            error.value = err.response?.data?.error || 'Failed to create quote';
             return null;
         }
         finally {
@@ -99,10 +97,11 @@ export const useQuotesStore = defineStore('quotes', () => {
             if (index !== -1) {
                 quotes.value[index] = response.data;
             }
-            return response.data;
+            success.value = response.data.message || "Quote updated successfully!";
+            return response.data.quote || response.data;
         }
         catch (err) {
-            error.value = err.data.message || 'Failed to update quote';
+            error.value = err.response?.data?.error || 'Failed to update quote';
             return null;
         }
         finally {
@@ -113,12 +112,13 @@ export const useQuotesStore = defineStore('quotes', () => {
     async function deleteQuote(id) {
         loading.value = true;
         try {
-            await axios.delete(`/quotes/${id}`);
+            const response = await axios.delete(`/quotes/${id}`);
             quotes.value = quotes.value.filter(q => q.id !== id);
+            success.value = response.data.message || "Quote deleted successfully!";
             return true;
         }
         catch (err) {
-            error.value = err.data.message || 'Failed to delete quote';
+            error.value = err.response?.data?.error || 'Failed to delete quote';
             return false;
         }
         finally {
