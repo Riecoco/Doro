@@ -63,17 +63,48 @@ export const useTimerStore = defineStore("timer", () => {
 
     function selectTimerMode(mode) {
         selectedTimerMode.value = mode;
+        const timerSettings = JSON.parse(localStorage.getItem("timerSettings"));
         if (mode === "focus") {
-            minutes.value = 25;
+            minutes.value = timerSettings?.focusDuration ?? 25;
             seconds.value = 0;
         } else if (mode === "short break") {
-            minutes.value = 5;
+            minutes.value = timerSettings?.shortBreakDuration ?? 5;
             seconds.value = 0;
         } else if (mode === "long break") {
-            minutes.value = 15;
+            minutes.value = timerSettings?.longBreakDuration ?? 15;
             seconds.value = 0;
         }
         stopTimer();
+    }
+
+    function saveTimerSettings(focusDuration, shortBreakDuration, longBreakDuration) {
+        localStorage.setItem("timerSettings", JSON.stringify({
+            focusDuration: Number.isFinite(focusDuration) && focusDuration > 0 ? focusDuration : 25,
+            shortBreakDuration: Number.isFinite(shortBreakDuration) && shortBreakDuration > 0 ? shortBreakDuration : 5,
+            longBreakDuration: Number.isFinite(longBreakDuration) && longBreakDuration > 0 ? longBreakDuration : 15
+        }));
+        selectTimerMode(selectedTimerMode.value);
+    }
+
+    function resetTimerSettings() {
+        localStorage.removeItem("timerSettings");
+        selectTimerMode(selectedTimerMode.value);
+    }
+
+    function getSavedTimerSettings() {
+        let timerSettings = null;
+
+        try {
+            timerSettings = JSON.parse(localStorage.getItem("timerSettings"));
+        } catch {
+            localStorage.removeItem("timerSettings");
+        }
+        
+        return {
+            focusDuration: Number.isFinite(timerSettings?.focusDuration) && timerSettings?.focusDuration > 0 ? timerSettings.focusDuration : 25,
+            shortBreakDuration: Number.isFinite(timerSettings?.shortBreakDuration) && timerSettings?.shortBreakDuration > 0 ? timerSettings.shortBreakDuration : 5,
+            longBreakDuration: Number.isFinite(timerSettings?.longBreakDuration) && timerSettings?.longBreakDuration > 0 ? timerSettings.longBreakDuration : 15
+        };
     }
 
     return {
@@ -92,7 +123,10 @@ export const useTimerStore = defineStore("timer", () => {
         selectTimerMode,
         greeting,
         clockMinutes,
-        clockSeconds
+        clockSeconds,
+        saveTimerSettings,
+        resetTimerSettings,
+        getSavedTimerSettings
     };
 
 });

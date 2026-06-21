@@ -44,22 +44,35 @@
     <section class="flex flex-col space-y-1">
       <h4 class="text-base md:text-lg">Timer Settings (in mins)</h4>
       <div class="flex lg:flex-row flex-col lg:space-x-6 space-y-4 text-sm md:text-base">
-        <FormInput type="number" label="Pomodoro" placeholder="25" />
-        <FormInput type="number" label="Short Break" placeholder="5" />
-        <FormInput type="number" label="Long Break" placeholder="15" />
+        <FormInput v-model="focusDuration" type="number" label="Pomodoro" placeholder="25" />
+        <FormInput v-model="shortBreakDuration" type="number" label="Short Break" placeholder="5" />
+        <FormInput v-model="longBreakDuration" type="number" label="Long Break" placeholder="15" />
+      </div>
+      <div class="mt-4 flex flex-col gap-2 md:flex-row md:gap-4 lg:gap-6">
+        <button @click="timerStore.resetTimerSettings" class="w-full bg-[#7a560070] hover:bg-[#7a560090] rounded-md p-3 text-sm md:text-base outline-white/30 outline-1 outline">Reset to default</button>
+        <button @click="timerStore.saveTimerSettings(focusDuration, shortBreakDuration, longBreakDuration)" class="w-full bg-[#7a560070] hover:bg-[#7a560090] rounded-md p-3 text-sm md:text-base outline-white/30 outline-1 outline">Save</button>
       </div>
     </section>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import ArrowToTopRight from "../../atoms/Icons/ArrowToTopRight.vue";
 import FormInput from "../../atoms/FormInput/FormInput.vue";
 import Toggle from "../../atoms/Toggle/Toggle.vue";
 import { useAuthStore } from "../../../stores/auth";
 import { useQuotesStore } from "../../../stores/quotes";
+import { useTimerStore } from "../../../stores/timer";
 const authStore = useAuthStore();
 const quotesStore = useQuotesStore();
+const timerStore = useTimerStore();
+
+
+const savedSettings = timerStore.getSavedTimerSettings();
+const focusDuration = ref(savedSettings.focusDuration);
+const shortBreakDuration = ref(savedSettings.shortBreakDuration);
+const longBreakDuration = ref(savedSettings.longBreakDuration);
 
 </script>
