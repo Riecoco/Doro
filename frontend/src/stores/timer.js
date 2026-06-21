@@ -11,6 +11,12 @@ export const useTimerStore = defineStore("timer", () => {
     const isRunning = ref(false);
     const selectedTimerMode = ref("focus");
 
+    const DEFAULT_SETTINGS = {
+        focusDuration: 25,
+        shortBreakDuration: 5,
+        longBreakDuration: 15
+    };
+
     const duration = computed(() => {
     return minutes.value * 60 + seconds.value;
     });
@@ -63,7 +69,7 @@ export const useTimerStore = defineStore("timer", () => {
 
     function selectTimerMode(mode) {
         selectedTimerMode.value = mode;
-        const timerSettings = JSON.parse(localStorage.getItem("timerSettings"));
+        const timerSettings = getSavedTimerSettings();
         if (mode === "focus") {
             minutes.value = timerSettings?.focusDuration ?? 25;
             seconds.value = 0;
@@ -78,17 +84,27 @@ export const useTimerStore = defineStore("timer", () => {
     }
 
     function saveTimerSettings(focusDuration, shortBreakDuration, longBreakDuration) {
-        localStorage.setItem("timerSettings", JSON.stringify({
-            focusDuration: Number.isFinite(focusDuration) && focusDuration > 0 ? focusDuration : 25,
-            shortBreakDuration: Number.isFinite(shortBreakDuration) && shortBreakDuration > 0 ? shortBreakDuration : 5,
-            longBreakDuration: Number.isFinite(longBreakDuration) && longBreakDuration > 0 ? longBreakDuration : 15
-        }));
+        const f = Number(focusDuration);
+        const s = Number(shortBreakDuration);
+        const l = Number(longBreakDuration);
+        const settings = {
+            focusDuration: Number.isFinite(f) && f > 0 ? f : DEFAULT_SETTINGS.focusDuration,
+            shortBreakDuration: Number.isFinite(s) && s > 0 ? s : DEFAULT_SETTINGS.shortBreakDuration,
+            longBreakDuration: Number.isFinite(l) && l > 0 ? l : DEFAULT_SETTINGS.longBreakDuration
+        };
+
+        localStorage.setItem("timerSettings", JSON.stringify(settings));
         selectTimerMode(selectedTimerMode.value);
+
+        return settings;
     }
 
     function resetTimerSettings() {
         localStorage.removeItem("timerSettings");
+        const settings = getSavedTimerSettings();
         selectTimerMode(selectedTimerMode.value);
+
+        return settings;
     }
 
     function getSavedTimerSettings() {

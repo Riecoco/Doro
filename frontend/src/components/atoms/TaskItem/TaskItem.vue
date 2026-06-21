@@ -18,10 +18,6 @@ import { useTemplateRef } from 'vue';
       * - When the input loses focus, save the change.
       * - If the text is empty, cancel the edit and restore the old value.
       *
-      * Events:
-      * - emit('update-task', updatedTaskData)
-      * - emit('delete-task', taskId)
-      * - emit('toggle-complete', task)
       */
 
 const props = defineProps({
@@ -40,7 +36,6 @@ const taskTitle = ref(props.task.title);
 function startEditing() {
   taskTitle.value = props.task.title
   editMode.value = true
-  console.log('Editing task:', props.task.id, 'Title:', taskTitle.value)
 }
 
 function saveTask() {
@@ -60,13 +55,11 @@ function saveTask() {
   }
 
   editMode.value = false
-  console.log('Saved task:', props.task.id, 'New Title:', trimmedTitle)
 }
 
 function cancelEdit() {
   taskTitle.value = props.task.title
   editMode.value = false
-  console.log('Edit cancelled for task:', props.task.id)
 }
 
 onClickOutside(editTarget, () => {
