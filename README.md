@@ -24,11 +24,10 @@ Doro is a Pomodoro productivity web application built for students who want a si
 
 ### Admin Features
 
-* View the quote dashboard.
+* View (paginated) quotes in the quotes dashboard.
 * Add new quotes.
 * Edit existing quotes.
 * Delete quotes.
-* Manage the quote collection used for random quotes on the home page.
 
 ## Deferred Features
 
