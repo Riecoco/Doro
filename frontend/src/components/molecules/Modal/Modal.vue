@@ -17,13 +17,15 @@
         </div>
 
         <slot></slot>
+        <Message v-if="props.message" :message="props.message" />
 
         <button
           type="button"
           @click="emit('submit')"
-          class="bg-indigo-500 hover:bg-indigo-600 transition-all text-white py-2 rounded-md cursor-pointer px-3 w-full sm:w-auto"
+          class="bg-indigo-500 hover:bg-indigo-600 transition-all text-white py-2 rounded-md cursor-pointer px-3 w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-60"
+          :disabled="props.isDisabled"
         >
-          {{ props.action }}
+          {{ props.isDisabled ? 'Submitting...' : props.action }}
         </button>
       </div>
     </div>
@@ -31,6 +33,8 @@
 </template>
 
 <script setup>
+import Message from "../../molecules/Message/Message.vue";
+
 const props = defineProps({
   resource: {
     type: String,
@@ -39,6 +43,13 @@ const props = defineProps({
   action: {
     type: String,
     required: true
+  },
+  isDisabled: {
+    type: Boolean,
+    default: false
+  },
+  message: {
+    type: String,
   }
 })
 

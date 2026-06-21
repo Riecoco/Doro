@@ -1,9 +1,10 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import TaskFilter from '../../atoms/TaskFilter/TaskFilter.vue';
 import TaskForm from '../../atoms/TaskInput/TaskInput.vue';
 import TaskItem from '../../atoms/TaskItem/TaskItem.vue';
 import { useTasksStore } from '../../../stores/tasks';
+import Loader from '../../atoms/Loader/Loader.vue';
 
 const tasksStore = useTasksStore();
 const tasks = ref([]);
@@ -42,7 +43,11 @@ async function toggleComplete(task) {
 </script>
 
 <template>
-    <div class="flex flex-col gap-3 m-4 pr-3 font-dm-sans scroll overflow-y-auto touch-pan-y h-60">
+    <div v-if="tasksStore.loading" class="flex h-60 flex-col items-center justify-center gap-2">
+        <Loader />
+        <p class="text-gray-300">Loading...</p>
+    </div>
+    <div v-else class="flex flex-col gap-3 m-4 pr-3 font-dm-sans scroll overflow-y-auto touch-pan-y h-60">
         <div class="flex w-full gap-2">
             <TaskFilter @completedStatus="handleCompletedStatus"/>
         </div>

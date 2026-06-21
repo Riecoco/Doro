@@ -30,7 +30,6 @@ export const useAuthStore = defineStore("auth", () => {
         } catch (err) {
             error.value =
                 err.response?.data?.error || "An error occurred during signup.";
-            router.push("/signup");
         } finally {
             loading.value = false;
         }
@@ -49,7 +48,6 @@ export const useAuthStore = defineStore("auth", () => {
             } catch (err) {
                 error.value =
                     err.response?.data?.error || "An error occurred during login.";
-                router.push("/login");
             } finally {
                 loading.value = false;
         }
