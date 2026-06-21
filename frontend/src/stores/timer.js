@@ -117,9 +117,9 @@ export const useTimerStore = defineStore("timer", () => {
         }
         
         return {
-            focusDuration: Number.isFinite(timerSettings?.focusDuration) && timerSettings?.focusDuration > 0 ? timerSettings.focusDuration : 25,
-            shortBreakDuration: Number.isFinite(timerSettings?.shortBreakDuration) && timerSettings?.shortBreakDuration > 0 ? timerSettings.shortBreakDuration : 5,
-            longBreakDuration: Number.isFinite(timerSettings?.longBreakDuration) && timerSettings?.longBreakDuration > 0 ? timerSettings.longBreakDuration : 15
+            focusDuration: Number.isFinite(timerSettings?.focusDuration) && timerSettings?.focusDuration > 0 ? timerSettings.focusDuration : DEFAULT_SETTINGS.focusDuration,
+            shortBreakDuration: Number.isFinite(timerSettings?.shortBreakDuration) && timerSettings?.shortBreakDuration > 0 ? timerSettings.shortBreakDuration : DEFAULT_SETTINGS.shortBreakDuration,
+            longBreakDuration: Number.isFinite(timerSettings?.longBreakDuration) && timerSettings?.longBreakDuration > 0 ? timerSettings.longBreakDuration : DEFAULT_SETTINGS.longBreakDuration
         };
     }
 
