@@ -25,7 +25,6 @@ export const useAuthStore = defineStore("auth", () => {
             setAuthToken(loginResponse.data.token);
             token.value = loginResponse.data.token;
             user.value = loginResponse.data.user;
-            success.value = response.data.message || "Registration successful! Redirecting to home page...";
             router.push("/");
             }
         } catch (err) {
@@ -46,13 +45,7 @@ export const useAuthStore = defineStore("auth", () => {
             setAuthToken(response.data.token);
             token.value = response.data.token;
             user.value = response.data.user;
-            if (user.value?.role === "admin") {
-                success.value = response.data.message || "Login successful! Redirecting to quotes page...";
-                router.push("/quotes");
-            } else {
-                success.value = response.data.message || "Login successful! Redirecting to home page...";
-                router.push("/");
-            }
+            user.value.role == 'admin' ? router.push("/admin") : router.push("/");
             } catch (err) {
                 error.value =
                     err.response?.data?.error || "An error occurred during login.";
@@ -68,8 +61,8 @@ export const useAuthStore = defineStore("auth", () => {
         setAuthToken(null);
         token.value = null;
         user.value = null;
-        success.value = "You've been logged out successfully.";
         await router.replace("/");
+        success.value = "You've been logged out successfully.";
     }
 
     async function fetchUser() {
@@ -81,14 +74,8 @@ export const useAuthStore = defineStore("auth", () => {
         try {
             const response = await axios.get("/auth/me");
             if (response.data) {
-            user.value = response.data;
-            }
-            if (user.value?.role === "admin") {
-                success.value = response.data.message || "Welcome back, admin! Redirecting to quotes page...";
-                router.push("/quotes");
-            } else {
-                success.value = response.data.message || "Welcome back! Redirecting to home page...";
-                router.push("/");
+                user.value = response.data.user;
+                success.value = response.data.message || "User data fetched successfully.";
             }
         } catch (err) {
             error.value = err.response?.data?.error || "Failed to fetch user data.";

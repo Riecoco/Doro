@@ -134,6 +134,7 @@ export const useQuotesStore = defineStore('quotes', () => {
         totalPages,
         loading,
         error,
+        success,
         getQuoteById,
         getRandomQuote,
         getAllQuotes,

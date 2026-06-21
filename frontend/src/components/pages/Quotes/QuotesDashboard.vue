@@ -1,5 +1,6 @@
 <template>
   <div class="m-5">
+    <Notification />
     <!-- Modals -->
     <Transition name="bounce">
       <QuoteAction @submitQuote="handleAdd" action="Add" v-if="showAddModal" @close="showAddModal=false"/>
@@ -54,10 +55,7 @@
         No quotes available. Add new quotes to populate the dashboard.
       </p>
 
-      <Table
-        v-else
-        :tableData="quotesStore.quotes ?? []"
-      >
+      <Table v-else :tableData="quotesStore.quotes ?? []">
         <template #actions="{ row }">
           <button
             class="text-blue-500 hover:text-blue-700 transition-all"
@@ -99,6 +97,7 @@
 
 <script setup>
 import SignInButton from "../../atoms/Button/SignInButton.vue";
+import Notification from "../../molecules/Notification/Notification.vue";
 import { onMounted, ref } from "vue";
 import Table from "../../organisms/Table/Table.vue";
 import TitleLogo from "../../atoms/Titles/TitleLogo.vue";

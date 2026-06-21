@@ -79,7 +79,7 @@ class AuthController extends BaseController
 
         return $this->sendSuccessResponse([
             'user' => $userDTO,
-            'message' => 'User data retrieved successfully'
+            'message' => 'Welcome!'
         ]);
     }
 }

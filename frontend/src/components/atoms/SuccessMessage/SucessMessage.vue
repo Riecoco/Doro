@@ -14,7 +14,7 @@ const emit = defineEmits(["close"]);
     <!-- From Uiverse.io by seyed-mohsen-mousavi --> 
 <div v-if="props.message" class="flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs fixed inset-0 z-90">
   <div
-    class="self-center mt-5 success-alert cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg bg-[#232531] px-[10px]"
+    class="self-center mt-5 ms-10 success-alert cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg bg-[#232531] px-[10px]"
   >
     <div class="flex gap-2">
       <div class="text-[#2b9875] bg-white/5 backdrop-blur-xl p-1 rounded-lg">

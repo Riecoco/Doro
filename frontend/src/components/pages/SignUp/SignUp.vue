@@ -38,11 +38,11 @@
         placeholder="••••••••"
       />
     </div>
-    <Message
-      v-if="authStore.error"
-      :message="authStore.error"
-      @close="authStore.error = ''"
-    />
+      <Message
+        v-if="authStore.error"
+        :message="authStore.error"
+        @close="clearNotification"
+      />
     <SignInButton @click="handleSignin()">Sign Up</SignInButton>
     <p class="text-center mt-4">
       Already have an account?
@@ -69,6 +69,10 @@ const password = ref("");
 const confirmPasswordValue = ref("");
 
 const authStore = useAuthStore();
+
+function clearNotification() {
+  authStore.error = null;
+}
 
 onMounted(() => {
   if (authStore.user) {

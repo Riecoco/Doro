@@ -27,9 +27,9 @@
       placeholder="••••••••"
     />
     <Message
-      v-if="authStore.error"
-      :message="authStore.error"
-      @close="authStore.error = ''"
+      v-if="authStore.error || authStore.success"
+      :message="authStore.error || authStore.success"
+      @close="clearNotification"
     />
     <SignInButton @click="handleLogin">Log in</SignInButton>
     <p class="mt-4">
@@ -43,20 +43,19 @@
 import FormInput from "../../atoms/FormInput/FormInput.vue";
 import SignInButton from "../../atoms/Button/SignInButton.vue";
 import { ref, onMounted } from "vue";
-import axios from "../../../utils/axios.js";
 import useAuthStore from "../../../stores/auth.js";
-import router from "../../../router/index.js";
 import Loader from "../../atoms/Loader/Loader.vue";
 import Message from "../../molecules/Message/Message.vue";
 
 const authStore = useAuthStore();
+
+function clearNotification() {
+  authStore.error = null;
+  authStore.success = null;
+}
 const user = ref(null);
 const email = ref("");
 const password = ref("");
-
-onMounted(async () => {
-    await authStore.fetchUser();
-});
 
 const handleLogin = async () => {
     await authStore.login(email.value, password.value);
