@@ -3,9 +3,11 @@ import SuccessMessage from "../../atoms/SuccessMessage/SucessMessage.vue";
 import ErrorMessage from "../../atoms/ErrorMessage/ErrorMessage.vue";
 import { useAuthStore } from "../../../stores/auth.js";
 import { useQuotesStore } from "../../../stores/quotes.js";
+import { useTasksStore } from "../../../stores/tasks.js";
 
 const authStore = useAuthStore();
 const quotesStore = useQuotesStore();
+const tasksStore = useTasksStore();
 
 function clearSuccess() {
   authStore.success = null;
@@ -15,6 +17,7 @@ function clearSuccess() {
 function clearError() {
   authStore.error = null;
   quotesStore.error = null;
+  tasksStore.error = null;
 }
 </script>
 
@@ -24,7 +27,7 @@ function clearError() {
             @close="clearSuccess"
         />
         <ErrorMessage
-            :message="authStore.error || quotesStore.error || ''"
+            :message="authStore.error || quotesStore.error || tasksStore.error || ''"
             @close="clearError"
         />
 

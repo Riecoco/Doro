@@ -44,7 +44,7 @@ export const useAuthStore = defineStore("auth", () => {
             setAuthToken(response.data.token);
             token.value = response.data.token;
             user.value = response.data.user;
-            user.value.role == 'admin' ? router.push("/admin") : router.push("/");
+            user.value.role == 'admin' ? router.push("/quotes") : router.push("/");
             } catch (err) {
                 error.value =
                     err.response?.data?.error || "An error occurred during login.";
