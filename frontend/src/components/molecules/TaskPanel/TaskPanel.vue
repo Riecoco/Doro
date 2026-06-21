@@ -4,7 +4,7 @@ import TaskFilter from '../../atoms/TaskFilter/TaskFilter.vue';
 import TaskForm from '../../atoms/TaskInput/TaskInput.vue';
 import TaskItem from '../../atoms/TaskItem/TaskItem.vue';
 import { useTasksStore } from '../../../stores/tasks';
-import Loader from '../../atoms/Loader/Loader.vue';
+import Loader from "../../atoms/Loader/Loader.vue";
 
 const tasksStore = useTasksStore();
 const tasks = ref([]);
@@ -21,38 +21,40 @@ const handleCompletedStatus = async (isCompleted) => {
 
 async function addTask(title) {
     await tasksStore.createTask({ title });
-    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value);
+    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value, false);
 }
 
 async function updateTask({ id, title }) {
     await tasksStore.updateTask(id, { title });
-    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value);
+    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value, false);
 }
 
 async function deleteTask(taskId) {
     await tasksStore.deleteTask(taskId);
-    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value);
+    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value, false);
 }
 
 async function toggleComplete(task) {
     await tasksStore.updateTask(task.id, { isCompleted: !task.isCompleted });
-    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value);
+    tasks.value = await tasksStore.getAllTasksByStatus(filterStatus.value, false);
 }
 
 
 </script>
 
 <template>
-    <div v-if="tasksStore.loading" class="flex h-60 flex-col items-center justify-center gap-2">
-        <Loader />
-        <p class="text-gray-300">Loading...</p>
-    </div>
-    <div v-else class="flex flex-col gap-3 m-4 pr-3 font-dm-sans scroll overflow-y-auto touch-pan-y h-60">
+    <div class="flex flex-col gap-3 m-4 pr-3 font-dm-sans scroll overflow-y-auto touch-pan-y h-60">
         <div class="flex w-full gap-2">
             <TaskFilter @completedStatus="handleCompletedStatus"/>
         </div>
         <TaskForm v-if="filterStatus === false" @add="addTask"/>
-        <TaskItem v-if="tasks.length > 0" v-for="task in tasks" :key="task.id" :task="task" @delete="deleteTask" @update="updateTask" @toggle-complete="toggleComplete"/>
-        <div v-else class="text-gray-300 text-center mt-4">No tasks available.</div>
+        <div v-if="tasksStore.loading" class="flex flex-col self-center justify-center mt-5 space-y-2">
+            <Loader/>
+            <p class="text-gray-500">Loading...</p>
+        </div>
+        <div v-else class="flex flex-col gap-3">
+            <TaskItem v-if="tasks.length > 0" v-for="task in tasks" :key="task.id" :task="task" @delete="deleteTask" @update="updateTask" @toggle-complete="toggleComplete"/>
+            <div v-else class="text-gray-300 text-center mt-4">No tasks available.</div>
+        </div>
     </div>
 </template>

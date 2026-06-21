@@ -29,7 +29,7 @@
 
 .loader::after {
   background-color: #0f9255;
-  animation-delay: 0.5s;
+  animation-delay: -0.5s;
 }
 
 @keyframes rotate9 {

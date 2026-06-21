@@ -9,7 +9,6 @@ export const useTasksStore = defineStore('tasks', () => {
     const error = ref(null);
 
     async function getTaskById(id) {
-        loading.value = true;
         try {
             const response = await axios.get(`/tasks/${id}`);
             currentTask.value = response.data;
@@ -17,13 +16,11 @@ export const useTasksStore = defineStore('tasks', () => {
         } catch (err) {
             error.value = err.response?.data?.error || 'Failed to fetch task';
             return null;
-        } finally {
-            loading.value = false;
         }
     }
 
-    async function getAllTasksByStatus(isCompleted) {
-        loading.value = true;
+    async function getAllTasksByStatus(isCompleted, showLoading = true) {
+        if (showLoading) loading.value = true;
         try {
             const response = await axios.get('/tasks', {
                 params: {
@@ -37,47 +34,37 @@ export const useTasksStore = defineStore('tasks', () => {
             tasks.value = [];
             return [];
         } finally {
-            loading.value = false;
+            if (showLoading) loading.value = false;
         }
     }
 
     async function createTask(taskData) {
-        loading.value = true;
         try{
             const response = await axios.post('/tasks', taskData);
             return response.data;
         } catch (err) {
             error.value = err.response?.data?.error || 'Failed to create task';
             return null;
-        } finally {
-            loading.value = false;
         }
     }
 
     async function updateTask(id, taskData) {
-        loading.value = true;
         try {
             const response = await axios.patch(`/tasks/${id}`, taskData);
             return response.data;
         } catch (err) {
             error.value = err.response?.data?.error || 'Failed to update task';
             return null;
-        } finally {
-            loading.value = false;
         }
     }
 
     async function deleteTask(id) {
-        loading.value = true;
         try {
             await axios.delete(`/tasks/${id}`);
             return true;
         } catch (err) {
             error.value = err.response?.data?.error || 'Failed to delete task';
             return false;
-        }
-        finally {
-            loading.value = false;
         }
     }
 
