@@ -44,7 +44,7 @@ These features may be added in a future version.
 
 ## Data Seeder
 
-`developmentdb.sql`
+`developmentdb.sql` in the backend folder
 
 ## Test Accounts
 
