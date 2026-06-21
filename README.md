@@ -1,79 +1,68 @@
-# Web Development 2 Boilerplate
+# Doro Pomodoro Productivity App
 
-A full-stack web application, featuring a PHP REST API backend and a Vue 3 frontend.
+Doro is a Pomodoro productivity web application built for students who want a simple and aesthetic way to manage study sessions. Users can log in, manage personal tasks, use a customizable Pomodoro timer, and view motivational quotes. Admin users can manage the quote collection shown in the app.
 
-## 🏗️ Architecture
+## Implemented Features
 
-This project consists of two main components:
+### Authentication
 
-- **Backend**: PHP REST API following MVC architecture patterns
-- **Frontend**: Vue 3 application with Vite, Tailwind CSS, and Storybook
+* Users can register and log in.
+* JWT authentication is used to protect private routes.
+* User roles are supported.
+* Admin-only functionality is protected through backend role authorization.
 
-## 📁 Project Structure
+### Normal User Features
 
-```
-web_development_2_boilerplate/
-├── backend/          # PHP REST API
-│   ├── app/          # Application code
-│   ├── docker-compose.yml
-│   └── README.md     # Backend documentation
-└── frontend/         # Vue 3 application
-    ├── src/          # Source code
-    └── README.md     # Frontend documentation
-```
+* View the home page with the Pomodoro timer, task panel, and random quote.
+* Create personal tasks using an inline input.
+* Edit existing tasks by clicking on the task text.
+* Save task edits by clicking away from the input.
+* Mark tasks as completed.
+* Delete tasks.
+* Switch between To Do and Completed task views.
+* Change Pomodoro timer settings for focus time, short break, and long break.
 
-## 🚀 Quick Start
+### Admin Features
 
-### Prerequisites
+* View the quote dashboard.
+* Add new quotes.
+* Edit existing quotes.
+* Delete quotes.
+* Manage the quote collection used for random quotes on the home page.
 
-- **Docker and Docker Compose** (for backend)
-- **Node.js** ^20.19.0 or >=22.12.0 (for frontend)
-- **npm** or **yarn**
+## Deferred Features
 
-### Backend Setup
+The original proposal included more personalization and media-related features. To keep the final version stable and realistic for the deadline, the following features were postponed:
 
-1. Navigate to the backend directory:
+* Spotify integration
+* Time usage reports
+* Subtasks
+* Task notes
+* Background image customization
+* Sound effects when the timer ends
 
-```bash
-cd backend
-```
+These features may be added in a future version.
 
-2. Start Docker containers:
+## Data Seeder
 
-```bash
-docker-compose up
-```
+`developmentdb.sql`
 
-3. Install PHP dependencies:
+## Test Accounts
 
-```bash
-docker-compose exec php composer install
-```
+```txt
+Normal user: amyra
+Email: amyra@example.com
+Password: password123
 
-The API will be available at **http://localhost**
-
-For detailed backend documentation, see [backend/README.md](./backend/README.md)
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-
-```bash
-cd frontend
+Admin user: mia.admin
+Email: mia.admin@example.com
+Password: password123
 ```
 
-2. Install dependencies:
+## AI Disclosure
 
-```bash
-npm install
-```
+An AI disclosure statement is included in `AI_DISCLOSURE.md`.
 
-3. Start the development server:
+## GitHub Repository
 
-```bash
-npm run dev
-```
-
-The frontend will be available at **http://localhost:5173** (or the port shown in terminal)
-
-For detailed frontend documentation, see [frontend/README.md](./frontend/README.md)
+https://github.com/Riecoco/Doro
