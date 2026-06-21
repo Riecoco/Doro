@@ -4,9 +4,7 @@ namespace App\Framework;
 
 class Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     protected function sendSuccessResponse($data = [], $code = 200)
     {
@@ -23,6 +21,17 @@ class Controller
     }
 
     /**
+     * Gets and decodes JSON data from the request body
+     * 
+     * @return array|null Returns decoded JSON data as array or null if invalid
+     */
+    protected function getPostData(): ?array
+    {
+        $input = file_get_contents('php://input');
+        return json_decode($input, true);
+    }
+
+    /**
      * Maps POST data (JSON) to an instance of the specified class
      * 
      * @param string $className The fully qualified class name
@@ -30,17 +39,13 @@ class Controller
      */
     protected function mapPostDataToClass(string $className): ?object
     {
-        $input = file_get_contents('php://input');
-        $data = json_decode($input, true);
+        $data = $this->getPostData();
 
-        $instance = new $className();
-        
-        foreach ($data as $key => $value) {
-            if (property_exists($instance, $key)) {
-                $instance->$key = $value;
-            }
+        if ($data === null) {
+            return null;
         }
 
-        return $instance;
+        // Pass data to constructor instead of setting properties manually
+        return new $className($data);
     }
 }

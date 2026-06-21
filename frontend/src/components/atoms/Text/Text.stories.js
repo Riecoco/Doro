@@ -1,66 +1,32 @@
-import Text from './Text.vue';
+/**
+ * Storybook stories for DM Sans body text components
+ */
+import TextSm from './TextSm.vue';
+import TextMd from './TextMd.vue';
+import TextLg from './TextLg.vue';
 
 export default {
-  title: 'Atoms/Text',
-  component: Text,
-  tags: ['autodocs'],
-  argTypes: {
-    as: {
-      control: { type: 'select' },
-      options: ['p', 'span', 'div', 'label'],
-    },
-    size: {
-      control: { type: 'select' },
-      options: ['xs', 'sm', 'base', 'lg'],
-    },
-    weight: {
-      control: { type: 'select' },
-      options: ['normal', 'medium', 'semibold', 'bold'],
-    },
-    color: {
-      control: { type: 'select' },
-      options: ['default', 'muted', 'primary', 'secondary'],
-    },
-  },
+    title: 'Atoms/Text',
+    tags: ['autodocs'],
 };
 
-export const Default = {
-  args: {
-    children: 'This is default text',
-  },
-  render: (args) => ({
-    components: { Text },
-    setup() {
-      return { args };
-    },
-    template: '<Text v-bind="args">This is default text</Text>',
-  }),
+export const Small = {
+    render: () => ({
+        components: { TextSm },
+        template: '<TextSm>This is small body text (text-sm)goodgrief</TextSm>',
+    }),
 };
 
-export const Sizes = {
-  render: () => ({
-    components: { Text },
-    template: `
-      <div class="space-y-2">
-        <Text size="xs">Extra small text</Text>
-        <Text size="sm">Small text</Text>
-        <Text size="base">Base text</Text>
-        <Text size="lg">Large text</Text>
-      </div>
-    `,
-  }),
+export const Medium = {
+    render: () => ({
+        components: { TextMd },
+        template: '<TextMd>This is medium body text (text-base)</TextMd>',
+    }),
 };
 
-export const Colors = {
-  render: () => ({
-    components: { Text },
-    template: `
-      <div class="space-y-2">
-        <Text color="default">Default color text</Text>
-        <Text color="muted">Muted color text</Text>
-        <Text color="primary">Primary color text</Text>
-        <Text color="secondary">Secondary color text</Text>
-      </div>
-    `,
-  }),
+export const Large = {
+    render: () => ({
+        components: { TextLg },
+        template: '<TextLg>This is large body text (text-lg)</TextLg>',
+    }),
 };

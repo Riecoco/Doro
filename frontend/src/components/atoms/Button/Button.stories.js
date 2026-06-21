@@ -1,47 +1,80 @@
-import { fn } from "storybook/test";
+/**
+ * Storybook stories for Button components
+ */
+import MenuButton from './MenuButton.vue';
+import SelectTimerButton from './SelectTimerButton.vue';
 
-import MyButton from "./Button.vue";
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
+// MenuButton Stories
 export default {
-  title: "Atoms/Button",
-  component: MyButton,
-  tags: ["autodocs"],
-  argTypes: {
-    size: {
-      control: { type: "select" },
-      options: ["small", "medium", "large"],
+    title: 'Atoms/Button/MenuButton',
+    component: MenuButton,
+    tags: ['autodocs'],
+    argTypes: {
+        activeMenuIndex: {
+            control: 'number',
+        },
+        index: {
+            control: 'number',
+        },
     },
-    backgroundColor: { control: "color" },
-  },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
-  args: { onClick: fn() },
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary = {
-  args: {
-    primary: true,
-    label: "Button",
-  },
+const MenuButtonTemplate = (args) => ({
+    components: { MenuButton },
+    setup() {
+        return { args };
+    },
+    template: '<MenuButton v-bind="args"><span>Menu Item</span></MenuButton>',
+});
+
+export const MenuButtonClosed = MenuButtonTemplate.bind({});
+MenuButtonClosed.args = {
+    activeMenuIndex: -1,
+    index: 0,
 };
 
-export const Secondary = {
-  args: {
-    label: "Button",
-  },
+export const MenuButtonOpen = MenuButtonTemplate.bind({});
+MenuButtonOpen.args = {
+    activeMenuIndex: 0,
+    index: 0,
 };
 
-export const Large = {
-  args: {
-    size: "large",
-    label: "Button",
-  },
+// SelectTimerButton Stories
+export const SelectTimerButtonStory = {
+    title: 'Atoms/Button/SelectTimerButton',
+    component: SelectTimerButton,
+    tags: ['autodocs'],
+    argTypes: {
+        minute: {
+            control: 'number',
+        },
+        selectedTimerMode: {
+            control: 'text',
+        },
+        mode: {
+            control: 'text',
+        },
+    },
 };
 
-export const Small = {
-  args: {
-    size: "small",
-    label: "Button",
-  },
+const SelectTimerButtonTemplate = (args) => ({
+    components: { SelectTimerButton },
+    setup() {
+        return { args };
+    },
+    template: '<SelectTimerButton v-bind="args" />',
+});
+
+export const SelectTimerButtonInactive = SelectTimerButtonTemplate.bind({});
+SelectTimerButtonInactive.args = {
+    minute: 5,
+    selectedTimerMode: 'work',
+    mode: 'break',
+};
+
+export const SelectTimerButtonActive = SelectTimerButtonTemplate.bind({});
+SelectTimerButtonActive.args = {
+    minute: 5,
+    selectedTimerMode: 'work',
+    mode: 'work',
 };

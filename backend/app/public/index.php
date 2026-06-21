@@ -12,7 +12,7 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (preg_match('/^https?:\/\/(localhost|127\.0\.0\.1|::1)(:\d+)?$/', $origin)) {
     header('Access-Control-Allow-Origin: ' . $origin);
     // Specifies which HTTP methods are allowed when accessing the resource from the origin
-    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
     // Specifies which HTTP headers can be used when making the actual request
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
     // Allows cookies and authentication credentials to be sent with cross-origin requests
@@ -35,15 +35,30 @@ use function FastRoute\simpleDispatcher;
 /**
  * Define the routes for the application.
  */
-$dispatcher = simpleDispatcher(function (RouteCollector $r) {
-    // Article routes
-    $r->addRoute('GET', '/articles', ['App\Controllers\ArticleController', 'getAll']);
-    $r->addRoute('GET', '/articles/{id}', ['App\Controllers\ArticleController', 'get']);
-    $r->addRoute('POST', '/articles', ['App\Controllers\ArticleController', 'create']);
-    $r->addRoute('PUT', '/articles/{id}', ['App\Controllers\ArticleController', 'update']);
-    $r->addRoute('DELETE', '/articles/{id}', ['App\Controllers\ArticleController', 'delete']);
-});
+$dispatcher = simpleDispatcher(
+    function (RouteCollector $r) {
+        // Auth routes
+        $r->addRoute('POST', '/auth/login', ['App\Controllers\AuthController', 'login']);
+        $r->addRoute('POST', '/auth/register', ['App\Controllers\AuthController', 'register']);
+        $r->addRoute('GET', '/auth/me', ['App\Controllers\AuthController', 'loggedInUser']);
 
+        // Quote routes
+        $r->addRoute('GET', '/quotes', ['App\Controllers\QuoteController','getAll']);
+        $r->addRoute('GET', '/quotes/random', ['App\Controllers\QuoteController', 'getRandom']);
+        $r->addRoute('GET', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'getById']);
+        $r->addRoute('POST', '/quotes', ['App\Controllers\QuoteController', 'create']);
+        $r->addRoute('PATCH', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'update']);
+        $r->addRoute('DELETE', '/quotes/{id:\d+}', ['App\Controllers\QuoteController', 'delete']);
+
+        // Task routes
+        $r->addRoute('POST', '/tasks', ['App\Controllers\TaskController', 'create']);
+        $r->addRoute('GET', '/tasks', ['App\Controllers\TaskController', 'getAll']);
+        $r->addRoute('GET', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'getById']);
+        $r->addRoute('PATCH', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'update']);
+        $r->addRoute('DELETE', '/tasks/{id:\d+}', ['App\Controllers\TaskController', 'delete']);
+
+    }
+);
 
 /**
  * Get the request method and URI from the server variables and invoke the dispatcher.
